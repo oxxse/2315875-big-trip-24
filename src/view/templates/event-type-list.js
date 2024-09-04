@@ -11,7 +11,7 @@ export function createEventTypeList(events) {
   return (
     `<fieldset class="event__type-group">
       <legend class="visually-hidden">Event type</legend>
-      ${events.map((event) => createEventTypeItem(event))}
+      ${events.map((event) => createEventTypeItem(event)).join('')}
     </fieldset>`
   );
 }
