@@ -1,5 +1,5 @@
 import { createElement } from '../render';
-import { sortingTypes } from '../const';
+import { SORTING_TYPES } from '../const';
 
 function createSortingItem(sorting) {
   return (
@@ -20,7 +20,7 @@ function createSortingForm(sortings) {
 
 export default class SortingForm {
   getTemplate() {
-    return createSortingForm(sortingTypes);
+    return createSortingForm(SORTING_TYPES);
   }
 
   getElement() {

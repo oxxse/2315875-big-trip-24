@@ -1,5 +1,5 @@
 import { createElement } from '../render';
-import { emptyTexts } from '../const';
+import { EMPTY_TEXTS } from '../const';
 
 function createNoPoints(texts) {
   return (
@@ -9,9 +9,9 @@ function createNoPoints(texts) {
   );
 }
 
-export default class NpPoints {
+export default class NoPoints {
   getTemplate() {
-    return createNoPoints(emptyTexts);
+    return createNoPoints(EMPTY_TEXTS);
   }
 
   getElement() {

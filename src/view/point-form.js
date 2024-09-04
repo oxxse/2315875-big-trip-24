@@ -1,9 +1,10 @@
 import { createElement } from '../render.js';
-import {createEventTypeList} from './event-type-list.js';
-import {createDestinationForm} from './destination-form.js';
-import {createOfferSelector} from './offer-selector.js';
-import {createPhotosTape} from './photos-tape.js';
-import {eventTypes, destinations, offers, photos} from './../const.js';
+import {createEventTypeList} from './templates/event-type-list.js';
+import {createDestinationForm} from './templates/destination-form.js';
+import {EVENT_TYPES, DESTINATIONS} from './../const.js';
+import { createPointOffers } from './templates/point-offers.js';
+import { createPointDestination } from './templates/point-destination.js';
+import { photos } from './mock/mock.js';
 
 function createPointForm() {
   return (
@@ -18,11 +19,11 @@ function createPointForm() {
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
           <div class="event__type-list">
-            ${createEventTypeList(eventTypes)}
+            ${createEventTypeList(EVENT_TYPES)}
           </div>
         </div>
 
-        ${createDestinationForm(destinations)}
+        ${createDestinationForm(DESTINATIONS)}
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
@@ -44,30 +45,8 @@ function createPointForm() {
         <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-              <label class="event__offer-label" for="event-offer-luggage-1">
-                <span class="event__offer-title">Add luggage</span>
-                &plus;&euro;&nbsp;
-                <span class="event__offer-price">30</span>
-              </label>
-            </div>
-            ${offers.map((offer) => createOfferSelector(offer.title, offer.type, offer.price)).join('')}
-          </div>
-        </section>
-
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
-
-          <div class="event__photos-container">
-            ${createPhotosTape(photos)}
-          </div>
-        </section>
+        ${createPointOffers()}
+        ${createPointDestination(photos)}
       </section>
     </form>
   </li>`

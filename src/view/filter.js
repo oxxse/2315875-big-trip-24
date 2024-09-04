@@ -1,6 +1,6 @@
 
 import { createElement } from '../render';
-import { filterTypes } from '../const';
+import { FILTER_TYPES } from '../const';
 
 function createFilterItem(filter) {
   return (
@@ -22,7 +22,7 @@ function createFilters(filters) {
 
 export default class Filters {
   getTemplate() {
-    return createFilters(filterTypes);
+    return createFilters(FILTER_TYPES);
   }
 
   getElement() {
