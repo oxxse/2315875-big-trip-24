@@ -1,17 +1,19 @@
-function createEventTypeItem(type) {
+import { EVENT_TYPES } from '../../const';
+
+function createEventTypeItem(event, type) {
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+      <input id="event-type-${event}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${event}" ${event === type ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${event}" for="event-type-${event}-1">${event}</label>
     </div>`
   );
 }
 
-export function createEventTypeList(events) {
+export function createEventTypeList(type) {
   return (
     `<fieldset class="event__type-group">
       <legend class="visually-hidden">Event type</legend>
-      ${events.map((event) => createEventTypeItem(event)).join('')}
+      ${EVENT_TYPES.map((event) => createEventTypeItem(event, type)).join('')}
     </fieldset>`
   );
 }

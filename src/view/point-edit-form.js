@@ -1,12 +1,14 @@
 import { createElement } from '../render.js';
 import { createEventTypeList } from './templates/event-type-list.js';
 import { createDestinationForm } from './templates/destination-form.js';
-import { EVENT_TYPES, DESTINATIONS } from '../const.js';
 import { createPointOffers } from './templates/point-offers.js';
 import { createPointDestination } from './templates/point-destination.js';
 import { createOpenButton } from './templates/open-button.js';
+import { formatDate } from '../utils.js';
 
-function createPointEditForm() {
+function createPointEditForm(point, allOffers) {
+  const {price, dateFrom, dateTo, destination, offers, type} = point;
+  const pointOffers = allOffers.find((offer) => offer.type === type);
 
   return (
     `<li class="trip-events__item">
@@ -19,18 +21,18 @@ function createPointEditForm() {
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
             <div class="event__type-list">
-              ${createEventTypeList(EVENT_TYPES)}
+              ${createEventTypeList(type)}
             </div>
           </div>
 
-          ${createDestinationForm(DESTINATIONS)}
+          ${createDestinationForm(type, destination)}
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(dateFrom)}">
               &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(dateTo)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -38,7 +40,7 @@ function createPointEditForm() {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -46,8 +48,8 @@ function createPointEditForm() {
           ${createOpenButton()}
         </header>
         <section class="event__details">
-          ${createPointOffers()}
-          ${createPointDestination()}
+          ${createPointOffers(pointOffers, offers)}
+          ${createPointDestination(destination)}
         </section>
       </form>
     </li>`
@@ -55,8 +57,14 @@ function createPointEditForm() {
 }
 
 export default class PointEditForm {
+
+  constructor ({point, offers}) {
+    this.point = point;
+    this.offers = offers;
+  }
+
   getTemplate() {
-    return createPointEditForm();
+    return createPointEditForm(this.point, this.offers);
   }
 
   getElement() {
