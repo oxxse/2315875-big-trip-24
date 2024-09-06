@@ -1,7 +1,7 @@
 import { createPhotosTape } from './photos-tape';
 
 export function createPointDestination(destination) {
-  const photosContainer = destination.pictures ? `<div class="event__photos-container">${createPhotosTape(destination.pictures)}</div>` : '';
+  const photosContainer = destination.pictures && destination.pictures.lenth === 0 ? '' : `<div class="event__photos-container">${createPhotosTape(destination.pictures)}</div>`;
 
   return (
     `<section class="event__section  event__section--destination">

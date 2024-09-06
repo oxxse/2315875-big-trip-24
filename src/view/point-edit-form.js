@@ -6,9 +6,10 @@ import { createPointDestination } from './templates/point-destination.js';
 import { createOpenButton } from './templates/open-button.js';
 import { formatDate } from '../utils.js';
 
-function createPointEditForm(point, allOffers) {
-  const {price, dateFrom, dateTo, destination, offers, type} = point;
+function createPointEditForm(point, allOffers, destinations) {
+  const { price, dateFrom, dateTo, destination, offers, type } = point;
   const pointOffers = allOffers.find((offer) => offer.type === type);
+  const destinationItem = destinations.find((place) => place.id === destination);
 
   return (
     `<li class="trip-events__item">
@@ -49,7 +50,7 @@ function createPointEditForm(point, allOffers) {
         </header>
         <section class="event__details">
           ${createPointOffers(pointOffers, offers)}
-          ${createPointDestination(destination)}
+          ${createPointDestination(destinationItem)}
         </section>
       </form>
     </li>`
@@ -58,13 +59,14 @@ function createPointEditForm(point, allOffers) {
 
 export default class PointEditForm {
 
-  constructor ({point, offers}) {
+  constructor({ point, offers, destinations }) {
     this.point = point;
     this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate() {
-    return createPointEditForm(this.point, this.offers);
+    return createPointEditForm(this.point, this.offers, this.destinations);
   }
 
   getElement() {

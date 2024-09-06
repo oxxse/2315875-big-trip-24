@@ -5,7 +5,7 @@ const offers = [];
 
 function generateOffer(id) {
   return ({
-    id,
+    id: `${id}`,
     title: 'Upgrade',
     price: getRandomNumber(0, 1000)
   });
