@@ -1,7 +1,7 @@
 import { createElement } from '../render';
 import { createFavoriteButton } from './templates/favorite-button';
 import { createOpenButton } from './templates/open-button';
-import { formatDate, calculateDuration } from '../utils';
+import { formatPointDate, calculateDuration } from '../utils';
 
 function createSelectedOfferItem(offer) {
   return (
@@ -20,18 +20,18 @@ function createEventItem(point, offersData, destinations) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${formatDate(dateFrom)}</time>
+        <time class="event__date" datetime="2019-03-18">${formatPointDate(dateFrom)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destinationItem.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom)}</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${formatPointDate(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo)}</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${formatPointDate(dateTo)}</time>
           </p>
-          <p class="event__duration">${calculateDuration(dateFrom, dateTo)}D</p>
+          <p class="event__duration">${calculateDuration(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>

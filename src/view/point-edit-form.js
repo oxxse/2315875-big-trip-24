@@ -4,7 +4,7 @@ import { createDestinationForm } from './templates/destination-form.js';
 import { createPointOffers } from './templates/point-offers.js';
 import { createPointDestination } from './templates/point-destination.js';
 import { createOpenButton } from './templates/open-button.js';
-import { formatDate } from '../utils.js';
+import { formatInputDate } from '../utils.js';
 
 function createPointEditForm(point, allOffers, destinations) {
   const { price, dateFrom, dateTo, destination, offers, type } = point;
@@ -26,14 +26,14 @@ function createPointEditForm(point, allOffers, destinations) {
             </div>
           </div>
 
-          ${createDestinationForm(type, destination)}
+          ${createDestinationForm(type, destinationItem)}
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(dateFrom)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatInputDate(dateFrom)}">
               &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(dateTo)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatInputDate(dateTo)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
