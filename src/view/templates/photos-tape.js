@@ -1,13 +1,13 @@
-function createPhoto(photo) {
+function createPhoto(picture) {
   return (
-    `<img class="event__photo" src="img/photos/${photo}" alt="Event photo">`
+    `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
   );
 }
 
-export function createPhotosTape(sources) {
+export function createPhotosTape(pictures) {
   return (
     `<div class="event__photos-tape">
-      ${sources.map((source) => createPhoto(source)).join('')}
+      ${pictures.map((picture) => createPhoto(picture)).join('')}
     </div>`
   );
 }
