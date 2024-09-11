@@ -1,5 +1,5 @@
-import { createElement } from '../render';
 import { EMPTY_TEXTS } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 
 function createNoPoints(texts) {
   return (
@@ -9,19 +9,8 @@ function createNoPoints(texts) {
   );
 }
 
-export default class NoPoints {
-  getTemplate() {
+export default class NoPoints extends AbstractView {
+  get template() {
     return createNoPoints(EMPTY_TEXTS);
-  }
-
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

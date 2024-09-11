@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import { createFavoriteButton } from './templates/favorite-button';
 import { createOpenButton } from './templates/open-button';
 import { formatPointDate, calculateDuration } from '../utils';
@@ -46,25 +46,19 @@ function createEventItem(point, offersData, destinations) {
   );
 }
 
-export default class EventItem {
+export default class EventItem extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
   constructor({ point, offers, destinations }) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
   }
 
-  getTemplate() {
-    return createEventItem(this.point, this.offers, this.destinations);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEventItem(this.#point, this.#offers, this.#destinations);
   }
 }

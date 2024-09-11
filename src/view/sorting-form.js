@@ -1,5 +1,5 @@
-import { createElement } from '../render';
 import { SORTING_TYPES } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 
 function createSortingItem(sorting) {
   return (
@@ -18,19 +18,8 @@ function createSortingForm(sortings) {
   );
 }
 
-export default class SortingForm {
-  getTemplate() {
+export default class SortingForm extends AbstractView {
+  get template() {
     return createSortingForm(SORTING_TYPES);
-  }
-
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

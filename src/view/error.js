@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createError() {
   return (
@@ -8,19 +8,8 @@ function createError() {
   );
 }
 
-export default class Error {
-  getTemplate() {
+export default class Error extends AbstractView {
+  get template() {
     return createError();
-  }
-
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

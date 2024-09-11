@@ -1,4 +1,3 @@
-import { createElement } from '../render.js';
 import { createEventTypeList } from './templates/event-type-list.js';
 import { createDestinationForm } from './templates/destination-form.js';
 import { createPointOffers } from './templates/point-offers.js';
@@ -58,25 +57,17 @@ function createPointEditForm(point, allOffers, destinations) {
 }
 
 export default class PointEditForm {
+  #point = null;
+  #offers = null;
+  #destinations = null;
 
   constructor({ point, offers, destinations }) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
   }
 
-  getTemplate() {
-    return createPointEditForm(this.point, this.offers, this.destinations);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createPointEditForm(this.#point, this.#offers, this.#destinations);
   }
 }

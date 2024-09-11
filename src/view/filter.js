@@ -1,6 +1,5 @@
-
-import { createElement } from '../render';
 import { FILTER_TYPES } from '../const';
+import AbstractView from '../framework/view/abstract-view';
 
 function createFilterItem(filter) {
   return (
@@ -20,19 +19,8 @@ function createFilters(filters) {
   );
 }
 
-export default class Filters {
-  getTemplate() {
+export default class Filters extends AbstractView {
+  get template() {
     return createFilters(FILTER_TYPES);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
