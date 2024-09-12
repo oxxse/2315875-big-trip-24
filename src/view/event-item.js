@@ -38,7 +38,7 @@ function createEventItem(point, offersData, destinations) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${offersData.offersData.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
+        ${offersData.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
         ${createFavoriteButton(isFavorite)}
         ${createOpenButton()}
       </div>
@@ -50,15 +50,23 @@ export default class EventItem extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
+  #handleEditClick = null;
 
-  constructor({ point, offers, destinations }) {
+  constructor({ point, offers, destinations, onEditClick }) {
     super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler)
   }
 
   get template() {
     return createEventItem(this.#point, this.#offers, this.#destinations);
   }
+
+  #editClickHandler = () => {
+    this.#handleEditClick();
+  };
 }
