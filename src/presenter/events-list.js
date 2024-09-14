@@ -31,11 +31,6 @@ export default class EventsList {
     }
   }
 
-  // if (this.eventsList.length === 0) {
-  //   render(new NoPoints(), this.#eventListComponent);
-  //   return;
-  // }
-
   #renderSorting() {
     render(new SortingForm(), this.#sortingContainer);
   }
@@ -47,12 +42,6 @@ export default class EventsList {
       this.#renderEvent(this.eventsList[i]);
     }
   }
-
-
-  //   for (let i = 0; i < this.eventsList.length; i++) {
-  //     this.#renderEvent(this.eventsList[i]);
-  //   }
-  // }
 
   #renderEvent(point) {
     const handleEscapeKeydown = (evt) => {
