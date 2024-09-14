@@ -20,26 +20,46 @@ export default class EventsList {
     this.offersList = [...this.#eventsModel.offers];
     this.destinationsList = [...this.#eventsModel.destinations];
 
+    this.#renderNoPoints();
+    this.#renderSorting();
+    this.#renderEventsList();
+  }
+
+  #renderNoPoints() {
     if (this.eventsList.length === 0) {
       render(new NoPoints(), this.#eventListComponent);
-      return;
     }
+  }
 
+  // if (this.eventsList.length === 0) {
+  //   render(new NoPoints(), this.#eventListComponent);
+  //   return;
+  // }
+
+  #renderSorting() {
     render(new SortingForm(), this.#sortingContainer);
-    render(this.#eventListComponent, this.#sortingContainer);
-    // render(new PointEditForm({ point: this.eventsList[0], offers: this.offersList, destinations: this.destinationsList, isEdit: true }), this.#eventListComponent.element);
+  }
 
+
+  #renderEventsList() {
+    render(this.#eventListComponent, this.#sortingContainer);
     for (let i = 0; i < this.eventsList.length; i++) {
       this.#renderEvent(this.eventsList[i]);
     }
   }
 
+
+  //   for (let i = 0; i < this.eventsList.length; i++) {
+  //     this.#renderEvent(this.eventsList[i]);
+  //   }
+  // }
+
   #renderEvent(point) {
-    const handlerEscapeKeydown = (evt) => {
+    const handleEscapeKeydown = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
         replaceEditFormToEvent();
-        document.removeEventListener('keydown', handlerEscapeKeydown);
+        document.removeEventListener('keydown', handleEscapeKeydown);
       }
     };
 
@@ -49,7 +69,7 @@ export default class EventsList {
       destinations: this.destinationsList,
       onEditClick: () => {
         replaceEventToEditForm();
-        document.addEventListener('keydown', handlerEscapeKeydown);
+        document.addEventListener('keydown', handleEscapeKeydown);
       }
     });
 
@@ -60,11 +80,11 @@ export default class EventsList {
       isEdit: true,
       onFormSubmit: () => {
         replaceEditFormToEvent();
-        document.removeEventListener('keydown', handlerEscapeKeydown);
+        document.removeEventListener('keydown', handleEscapeKeydown);
       },
       onFormReset: () => {
         replaceEditFormToEvent();
-        document.removeEventListener('keydown', handlerEscapeKeydown);
+        document.removeEventListener('keydown', handleEscapeKeydown);
       }
     });
 

@@ -22,7 +22,7 @@ function createFilters(filters) {
 }
 
 export default class Filters extends AbstractView {
-  #points = null;
+  #points = [];
 
   constructor({ points }) {
     super();

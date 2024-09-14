@@ -58,9 +58,9 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
 }
 
 export default class PointEditForm extends AbstractView {
-  #point = null;
-  #offers = null;
-  #destinations = null;
+  #point = [];
+  #offers = [];
+  #destinations = [];
   #isEdit = null;
   #handleFormSubmit = null;
   #handleFormReset = null;
@@ -80,7 +80,7 @@ export default class PointEditForm extends AbstractView {
   }
 
   get template() {
-    return createPointEditForm(this.#point, this.#offers, this.#destinations, this.#isEdit, this.#handleFormReset, this.#handleFormSubmit);
+    return createPointEditForm(this.#point, this.#offers, this.#destinations, this.#isEdit);
   }
 
   #formSubmitHandler = (evt) => {

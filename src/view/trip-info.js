@@ -15,8 +15,8 @@ function createTripInfo({totalPrice, destinationNames}) {
 }
 
 export default class TripInfo extends AbstractView {
-  #points = null;
-  #destinations = null;
+  #points = [];
+  #destinations = [];
 
   constructor({points, destinations}) {
     super();
