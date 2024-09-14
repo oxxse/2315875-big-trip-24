@@ -8,7 +8,7 @@ const sortingContainerElement = document.querySelector('.trip-events');
 const buttonContainerElement = document.querySelector('.trip-main');
 const eventsModel = new EventsModel;
 
-const headerPresenter = new Header(infoContainerElement, filterContainerElement, buttonContainerElement);
+const headerPresenter = new Header(infoContainerElement, filterContainerElement, buttonContainerElement, eventsModel);
 const eventListPresenter = new EventList(sortingContainerElement, eventsModel);
 
 headerPresenter.init();

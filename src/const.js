@@ -3,7 +3,18 @@ const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-i
 
 const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
-const FILTER_TYPES = ['everyting', 'future', 'present', 'past'];
+const DATE_FORMATS = {
+  DATE_INPUT: 'DD/MM/YY HH:mm',
+  POINT_TIME: 'HH:mm',
+  POINT_DATE: 'MMM DD'
+};
+
+const FILTER_TYPES = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
 
 const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offer'];
 
@@ -17,5 +28,6 @@ export {
   FILTER_TYPES,
   DESTINATIONS,
   EVENT_TYPES,
-  MAX_OFFERS
+  MAX_OFFERS,
+  DATE_FORMATS
 };

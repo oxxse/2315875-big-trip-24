@@ -1,7 +1,8 @@
 import AbstractView from '../framework/view/abstract-view';
 import { createFavoriteButton } from './templates/favorite-button';
 import { createOpenButton } from './templates/open-button';
-import { formatPointDate, calculateDuration } from '../utils';
+import { formatDate, calculateDuration } from '../utils';
+import { DATE_FORMATS } from '../const';
 
 function createSelectedOfferItem(offer) {
   return (
@@ -20,16 +21,16 @@ function createEventItem(point, offersData, destinations) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${formatPointDate(dateFrom)}</time>
+        <time class="event__date" datetime="2019-03-18">${formatDate(dateFrom, DATE_FORMATS.POINT_DATE)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destinationItem.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${formatPointDate(dateFrom)}</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, DATE_FORMATS.POINT_TIME)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${formatPointDate(dateTo)}</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, DATE_FORMATS.POINT_TIME)}</time>
           </p>
           <p class="event__duration">${calculateDuration(dateFrom, dateTo)}</p>
         </div>
