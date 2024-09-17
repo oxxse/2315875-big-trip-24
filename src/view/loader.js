@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 
-function createError() {
+function createLoader() {
   return (
     `<p class="trip-events__msg">
       Loading...
@@ -10,6 +10,6 @@ function createError() {
 
 export default class Error extends AbstractView {
   get template() {
-    return createError();
+    return createLoader();
   }
 }

@@ -7,11 +7,11 @@ import NoPoints from '../view/no-points';
 
 export default class EventsList {
   #eventListComponent = new EventList;
-  #sortingContainer = null;
+  #infoContainer = null;
   #eventsModel = null;
 
-  constructor(sortingContainer, eventsModel) {
-    this.#sortingContainer = sortingContainer;
+  constructor(infoContainer, eventsModel) {
+    this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
   }
 
@@ -20,46 +20,52 @@ export default class EventsList {
     this.offersList = [...this.#eventsModel.offers];
     this.destinationsList = [...this.#eventsModel.destinations];
 
-    this.#renderNoPoints();
-    this.#renderSorting();
-    this.#renderEventsList();
-  }
-
-  #renderNoPoints() {
     if (this.eventsList.length === 0) {
-      render(new NoPoints(), this.#eventListComponent);
+      this.#renderNoPoints();
+    } else {
+      this.#renderSorting();
+      this.#renderEventsList();
     }
   }
 
+  #renderNoPoints() {
+    render(new NoPoints(), this.#infoContainer);
+  }
+
   #renderSorting() {
-    render(new SortingForm(), this.#sortingContainer);
+    render(new SortingForm(), this.#infoContainer);
   }
 
 
   #renderEventsList() {
-    render(this.#eventListComponent, this.#sortingContainer);
-    for (let i = 0; i < this.eventsList.length; i++) {
-      this.#renderEvent(this.eventsList[i]);
-    }
+    render(this.#eventListComponent, this.#infoContainer);
+    this.eventsList.forEach((event) => this.#renderEvent(event));
   }
 
   #renderEvent(point) {
-    const handleEscapeKeydown = (evt) => {
+    const escapeKeydownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
         replaceEditFormToEvent();
-        document.removeEventListener('keydown', handleEscapeKeydown);
+        document.removeEventListener('keydown', escapeKeydownHandler);
       }
+    };
+
+    const showEventEditor = () => {
+      replaceEventToEditForm();
+      document.addEventListener('keydown', escapeKeydownHandler);
+    };
+
+    const hideEventEditor = () => {
+      replaceEditFormToEvent();
+      document.removeEventListener('keydown', escapeKeydownHandler);
     };
 
     const eventItem = new EventItem({
       point,
       offers: this.offersList,
       destinations: this.destinationsList,
-      onEditClick: () => {
-        replaceEventToEditForm();
-        document.addEventListener('keydown', handleEscapeKeydown);
-      }
+      onEditClick: () => showEventEditor()
     });
 
     const editForm = new PointEditForm({
@@ -67,14 +73,8 @@ export default class EventsList {
       offers: this.offersList,
       destinations: this.destinationsList,
       isEdit: true,
-      onFormSubmit: () => {
-        replaceEditFormToEvent();
-        document.removeEventListener('keydown', handleEscapeKeydown);
-      },
-      onFormReset: () => {
-        replaceEditFormToEvent();
-        document.removeEventListener('keydown', handleEscapeKeydown);
-      }
+      onFormSubmit: () => hideEventEditor(),
+      onFormReset: () => hideEventEditor()
     });
 
     function replaceEventToEditForm() {

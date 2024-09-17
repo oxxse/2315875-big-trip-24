@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FILTER_TYPES } from './const';
+import { FilterType } from './const';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
@@ -33,12 +33,12 @@ function calculateDuration(startDate, endDate) {
   return dayjs(timeDuration).format(timeFormat);
 }
 
-const filter = {
-  [FILTER_TYPES.EVERYTHING]: (events) => events,
-  [FILTER_TYPES.FUTURE]: (events) => events.filter((event) => dayjs().isBefore(dayjs(event.dateFrom))),
-  [FILTER_TYPES.PRESENT]: (events) => events.filter((event) => dayjs().isSameOrAfter(dayjs(event.dateFrom)) && dayjs().isSameOrBefore(dayjs(event.dateTo))),
-  [FILTER_TYPES.PAST]: (events) => events.filter((event) => dayjs().isAfter(dayjs(event.dateTo)))
+const filterBy = {
+  [FilterType.EVERYTHING]: (events) => events,
+  [FilterType.FUTURE]: (events) => events.filter((event) => dayjs().isBefore(dayjs(event.dateFrom))),
+  [FilterType.PRESENT]: (events) => events.filter((event) => dayjs().isSameOrAfter(dayjs(event.dateFrom)) && dayjs().isSameOrBefore(dayjs(event.dateTo))),
+  [FilterType.PAST]: (events) => events.filter((event) => dayjs().isAfter(dayjs(event.dateTo)))
 };
 
 
-export {getRandomArrayElement, filter, getRandomNumber, formatDate, calculateDuration};
+export {getRandomArrayElement, filterBy, getRandomNumber, formatDate, calculateDuration};

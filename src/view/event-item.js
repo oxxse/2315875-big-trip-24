@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view';
 import { createFavoriteButton } from './templates/favorite-button';
 import { createOpenButton } from './templates/open-button';
 import { formatDate, calculateDuration } from '../utils';
-import { DATE_FORMATS } from '../const';
+import { DateFormat } from '../const';
 
 function createSelectedOfferItem(offer) {
   return (
@@ -14,23 +14,24 @@ function createSelectedOfferItem(offer) {
   );
 }
 
-function createEventItem(point, offersData, destinations) {
+function createEventItem(point, offersByType, destinations) {
   const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
   const destinationItem = destinations.find((place) => place.id === destination);
+  const offersData = offersByType.find((offer) => offer.type === type);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${formatDate(dateFrom, DATE_FORMATS.POINT_DATE)}</time>
+        <time class="event__date" datetime="2019-03-18">${formatDate(dateFrom, DateFormat.POINT_DATE)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destinationItem.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, DATE_FORMATS.POINT_TIME)}</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, DateFormat.POINT_TIME)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, DATE_FORMATS.POINT_TIME)}</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, DateFormat.POINT_TIME)}</time>
           </p>
           <p class="event__duration">${calculateDuration(dateFrom, dateTo)}</p>
         </div>
@@ -39,7 +40,7 @@ function createEventItem(point, offersData, destinations) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${offersData.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
+        ${offersData.offersData.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
         ${createFavoriteButton(isFavorite)}
         ${createOpenButton()}
       </div>
@@ -48,10 +49,10 @@ function createEventItem(point, offersData, destinations) {
 }
 
 export default class EventItem extends AbstractView {
-  #point = null;
-  #offers = null;
-  #destinations = null;
-  #handleEditClick = null;
+  #point = [];
+  #offers = [];
+  #destinations = [];
+  #handleEditClick = [];
 
   constructor({ point, offers, destinations, onEditClick }) {
     super();

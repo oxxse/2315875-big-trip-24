@@ -1,4 +1,4 @@
-import { filter } from '../utils';
+import { filterBy } from '../utils';
 import AbstractView from '../framework/view/abstract-view';
 
 function createFilterItem(filterData, isChecked) {
@@ -34,7 +34,7 @@ export default class Filters extends AbstractView {
   }
 
   #generateFilters() {
-    return Object.entries(filter).map(
+    return Object.entries(filterBy).map(
       ([filterType, filterPoints]) => ({
         type: filterType,
         count: filterPoints(this.#points).length,

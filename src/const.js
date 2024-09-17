@@ -3,13 +3,13 @@ const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-i
 
 const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
-const DATE_FORMATS = {
+const DateFormat = {
   DATE_INPUT: 'DD/MM/YY HH:mm',
   POINT_TIME: 'HH:mm',
   POINT_DATE: 'MMM DD'
 };
 
-const FILTER_TYPES = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
@@ -25,9 +25,9 @@ const MAX_OFFERS = 4;
 export {
   EMPTY_TEXTS,
   SORTING_TYPES,
-  FILTER_TYPES,
+  FilterType,
   DESTINATIONS,
   EVENT_TYPES,
   MAX_OFFERS,
-  DATE_FORMATS
+  DateFormat
 };

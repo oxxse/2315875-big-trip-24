@@ -6,6 +6,7 @@ const EVENTS_COUNT = 4;
 
 export default class EventsModel {
   #offers = generateOffers();
+  offers2 = generateOffers();
   #events = Array.from({length: EVENTS_COUNT}, getRandomEvent);
   #destinations = getDestinationList();
 
