@@ -1,32 +1,13 @@
-// import dayjs from 'dayjs';
-
-// const DATE_FORMAT = 'DD/MM/YY HH:mm';
-
-// function getRandomNumber(min = 1, max = 100) {
-//   return Math.floor(min + Math.random() * (max + 1 - min));
-// }
-
-// function getRandomArrayElement(items) {
-//   return items[getRandomNumber(0, items.length - 1)];
-// }
-
-// function formatDate(date) {
-//   return date ? dayjs(date).format(DATE_FORMAT) : '';
-// }
-
-// function calculateDuration(startDate, endDate) {
-//   return dayjs(endDate).diff(startDate, 'd');
-// }
-
-// export {getRandomArrayElement, getRandomNumber, formatDate, calculateDuration};
-
-
 import dayjs from 'dayjs';
+import { FilterType } from './const';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
-const DATE_INPUT_FORMAT = 'DD/MM/YY HH:mm';
-const POINT_TIME_FORMAT = 'HH:mm';
 const MILLISECONDS_IN_HOUR = 3600000;
 const MILLISECONDS_IN_DAY = 86400000;
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 function getRandomNumber(min = 1, max = 100) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -36,12 +17,8 @@ function getRandomArrayElement(items) {
   return items[getRandomNumber(0, items.length - 1)];
 }
 
-function formatInputDate(date) {
-  return date ? dayjs(date).format(DATE_INPUT_FORMAT) : '';
-}
-
-function formatPointDate(date) {
-  return date ? dayjs(date).format(POINT_TIME_FORMAT) : '';
+function formatDate(date, dateFormat) {
+  return date ? dayjs(date).format(dateFormat) : '';
 }
 
 function calculateDuration(startDate, endDate) {
@@ -56,4 +33,12 @@ function calculateDuration(startDate, endDate) {
   return dayjs(timeDuration).format(timeFormat);
 }
 
-export {getRandomArrayElement, getRandomNumber, formatInputDate, formatPointDate, calculateDuration};
+const filterBy = {
+  [FilterType.EVERYTHING]: (events) => events,
+  [FilterType.FUTURE]: (events) => events.filter((event) => dayjs().isBefore(dayjs(event.dateFrom))),
+  [FilterType.PRESENT]: (events) => events.filter((event) => dayjs().isSameOrAfter(dayjs(event.dateFrom)) && dayjs().isSameOrBefore(dayjs(event.dateTo))),
+  [FilterType.PAST]: (events) => events.filter((event) => dayjs().isAfter(dayjs(event.dateTo)))
+};
+
+
+export {getRandomArrayElement, filterBy, getRandomNumber, formatDate, calculateDuration};

@@ -5,19 +5,20 @@ import { getDestinationList } from '../mock/destination.js';
 const EVENTS_COUNT = 4;
 
 export default class EventsModel {
-  offers = generateOffers();
-  events = Array.from({length: EVENTS_COUNT}, getRandomEvent);
-  destinations = getDestinationList();
+  #offers = generateOffers();
+  offers2 = generateOffers();
+  #events = Array.from({length: EVENTS_COUNT}, getRandomEvent);
+  #destinations = getDestinationList();
 
-  getEvents() {
-    return this.events;
+  get events() {
+    return this.#events;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 }

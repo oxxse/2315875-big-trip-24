@@ -1,6 +1,6 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
-function createError() {
+function createLoader() {
   return (
     `<p class="trip-events__msg">
       Loading...
@@ -8,19 +8,8 @@ function createError() {
   );
 }
 
-export default class Error {
-  getTemplate() {
-    return createError();
-  }
-
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+export default class Error extends AbstractView {
+  get template() {
+    return createLoader();
   }
 }

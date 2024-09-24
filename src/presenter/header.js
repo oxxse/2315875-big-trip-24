@@ -1,15 +1,32 @@
 import TripInfo from '../view/trip-info';
 import Filters from '../view/filter';
-import { render, RenderPosition } from '../render';
+import NewEventButton from '../view/new-event-button';
+import { render, RenderPosition } from '../framework/render';
 
 export default class Header {
-  constructor(infoContainer, filterContainer) {
-    this.infoContainer = infoContainer;
-    this.filterContainer = filterContainer;
+  #infoContainer = null;
+  #filterContainer = null;
+  #buttonContainer = null;
+  #eventsModel = null;
+
+  constructor(infoContainer, filterContainer, buttonContainer, eventsModel) {
+    this.#infoContainer = infoContainer;
+    this.#filterContainer = filterContainer;
+    this.#buttonContainer = buttonContainer;
+    this.#eventsModel = eventsModel;
   }
 
   init() {
-    render(new TripInfo(), this.infoContainer, RenderPosition.AFTERBEGIN);
-    render(new Filters(), this.filterContainer);
+    this.eventsList = [...this.#eventsModel.events];
+    this.destinationsList = [...this.#eventsModel.destinations];
+
+    render(new TripInfo({points: this.eventsList, destinations: this.#getCheckedDestinations()}), this.#infoContainer, RenderPosition.AFTERBEGIN);
+    render(new Filters({points: this.eventsList }), this.#filterContainer);
+    render(new NewEventButton(), this.#buttonContainer);
+  }
+
+  #getCheckedDestinations() {
+    const destinationsIds = this.eventsList.map((event) => event.destination);
+    return this.destinationsList.filter((destination) => destinationsIds.includes(destination.id));
   }
 }

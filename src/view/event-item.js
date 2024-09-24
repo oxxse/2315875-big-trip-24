@@ -1,7 +1,8 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import { createFavoriteButton } from './templates/favorite-button';
 import { createOpenButton } from './templates/open-button';
-import { formatPointDate, calculateDuration } from '../utils';
+import { formatDate, calculateDuration } from '../utils';
+import { DateFormat } from '../const';
 
 function createSelectedOfferItem(offer) {
   return (
@@ -13,23 +14,24 @@ function createSelectedOfferItem(offer) {
   );
 }
 
-function createEventItem(point, offersData, destinations) {
+function createEventItem(point, offersByType, destinations) {
   const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
   const destinationItem = destinations.find((place) => place.id === destination);
+  const offersData = offersByType.find((offer) => offer.type === type);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${formatPointDate(dateFrom)}</time>
+        <time class="event__date" datetime="2019-03-18">${formatDate(dateFrom, DateFormat.POINT_DATE)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destinationItem.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${formatPointDate(dateFrom)}</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, DateFormat.POINT_TIME)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${formatPointDate(dateTo)}</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, DateFormat.POINT_TIME)}</time>
           </p>
           <p class="event__duration">${calculateDuration(dateFrom, dateTo)}</p>
         </div>
@@ -46,25 +48,27 @@ function createEventItem(point, offersData, destinations) {
   );
 }
 
-export default class EventItem {
-  constructor({ point, offers, destinations }) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class EventItem extends AbstractView {
+  #point = [];
+  #offers = [];
+  #destinations = [];
+  #handleEditClick = [];
+
+  constructor({ point, offers, destinations, onEditClick }) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createEventItem(this.point, this.offers, this.destinations);
+  get template() {
+    return createEventItem(this.#point, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = () => {
+    this.#handleEditClick();
+  };
 }
