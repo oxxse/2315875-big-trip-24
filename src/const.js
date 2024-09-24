@@ -21,7 +21,13 @@ const Mode = {
   EDITING: 'EDITING'
 };
 
-const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offer'];
+const SortingType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer'
+};
 
 const EMPTY_TEXTS = [ 'Click New Event to create your first point', 'There are no past events now', 'There are no present events now', 'There are no future events now'];
 
@@ -29,7 +35,7 @@ const MAX_OFFERS = 4;
 
 export {
   EMPTY_TEXTS,
-  SORTING_TYPES,
+  SortingType,
   FilterType,
   DESTINATIONS,
   EVENT_TYPES,
