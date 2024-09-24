@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FilterType, SortingType } from './const';
+import { FilterType } from './const';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
@@ -51,11 +51,5 @@ const sortByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 const sortByTime = (pointA, pointB) => getTimeDifference(pointB) - getTimeDifference(pointA);
 
 const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
-
-// const sortBy = {
-//   [SortingType.DAY]: (points) => points.sort((first, second) => dayjs(first.dateFrom).diff(dayjs(second.dateFrom))),
-//   [SortingType.PRICE]: (points) => points.sort((first, second) => second.price - first.price),
-//   [SortingType.TIME]: (points) => points.sort((first, second) => calculateDuration(second.dateFrom, second.dateTo, true) - calculateDuration(first.dateFrom, first.dateTo, true))
-// };
 
 export {getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration};
