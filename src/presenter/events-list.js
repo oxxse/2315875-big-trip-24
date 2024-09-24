@@ -36,7 +36,6 @@ export default class EventsList {
     render(new SortingForm(), this.#infoContainer);
   }
 
-
   #renderEventsList() {
     render(this.#eventListComponent, this.#infoContainer);
     this.eventsList.forEach((event) => this.#renderEvent(event));
