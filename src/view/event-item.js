@@ -15,6 +15,7 @@ function createSelectedOfferItem(offer) {
 }
 
 function createEventItem(point, offersByType, destinations) {
+
   const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
   const destinationItem = destinations.find((place) => place.id === destination);
   const offersData = offersByType.find((offer) => offer.type === type);
@@ -49,26 +50,33 @@ function createEventItem(point, offersByType, destinations) {
 }
 
 export default class EventItem extends AbstractView {
-  #point = [];
+  #event = [];
   #offers = [];
   #destinations = [];
-  #handleEditClick = [];
+  #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({ point, offers, destinations, onEditClick }) {
+  constructor({ event, offers, destinations, onEditClick, onFavoriteClick }) {
     super();
-    this.#point = point;
+    this.#event = event;
     this.#offers = offers;
     this.#destinations = destinations;
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
-    return createEventItem(this.#point, this.#offers, this.#destinations);
+    return createEventItem(this.#event, this.#offers, this.#destinations);
   }
 
   #editClickHandler = () => {
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = () => {
+    this.#handleFavoriteClick();
   };
 }

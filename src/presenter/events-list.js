@@ -1,14 +1,15 @@
 import EventList from '../view/event-list';
 import SortingForm from '../view/sorting-form';
-import EventItem from '../view/event-item';
-import PointEditForm from '../view/point-edit-form';
-import { render, replace } from '../framework/render';
+import { render } from '../framework/render';
 import NoPoints from '../view/no-points';
+import Event from './event';
+import { updateItem } from '../utils';
 
 export default class EventsList {
   #eventListComponent = new EventList;
   #infoContainer = null;
   #eventsModel = null;
+  #eventPresenters = new Map();
 
   constructor(infoContainer, eventsModel) {
     this.#infoContainer = infoContainer;
@@ -38,52 +39,29 @@ export default class EventsList {
 
   #renderEventsList() {
     render(this.#eventListComponent, this.#infoContainer);
-    this.eventsList.forEach((event) => this.#renderEvent(event));
+    for (let i = 0; i < this.eventsList.length; i++) {
+      this.#renderEvent(this.eventsList[i]);
+    }
   }
 
-  #renderEvent(point) {
-    const escapeKeydownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditFormToEvent();
-        document.removeEventListener('keydown', escapeKeydownHandler);
-      }
-    };
-
-    const showEventEditor = () => {
-      replaceEventToEditForm();
-      document.addEventListener('keydown', escapeKeydownHandler);
-    };
-
-    const hideEventEditor = () => {
-      replaceEditFormToEvent();
-      document.removeEventListener('keydown', escapeKeydownHandler);
-    };
-
-    const eventItem = new EventItem({
-      point,
+  #renderEvent(event) {
+    const eventPresenter = new Event({
+      eventListComponent: this.#eventListComponent.element,
       offers: this.offersList,
       destinations: this.destinationsList,
-      onEditClick: () => showEventEditor()
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
-
-    const editForm = new PointEditForm({
-      point,
-      offers: this.offersList,
-      destinations: this.destinationsList,
-      isEdit: true,
-      onFormSubmit: () => hideEventEditor(),
-      onFormReset: () => hideEventEditor()
-    });
-
-    function replaceEventToEditForm() {
-      replace(editForm, eventItem);
-    }
-
-    function replaceEditFormToEvent() {
-      replace(eventItem, editForm);
-    }
-
-    render(eventItem, this.#eventListComponent.element);
+    eventPresenter.init(event);
+    this.#eventPresenters.set(event.id, eventPresenter);
   }
+
+  #handlePointChange = (updatedEvent) => {
+    this.eventsList = updateItem(this.eventsList, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
+
+  #handleModeChange = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetFormView());
+  };
 }
