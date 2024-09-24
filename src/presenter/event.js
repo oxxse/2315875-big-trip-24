@@ -51,15 +51,15 @@ export default class Event {
     }
 
     if (this.#mode === Mode.DEFAULT) {
-      replace(this.#eventItem, this.#editForm);
+      replace(this.#eventItem, prevEventItem);
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#editForm, this.#eventItem);
+      replace(this.#editForm, prevEditForm);
     }
 
-    remove(prevEditForm);
     remove(prevEventItem);
+    remove(prevEditForm);
   }
 
   resetFormView() {
@@ -82,6 +82,8 @@ export default class Event {
 
   #replaceEditFormToEvent() {
     replace(this.#eventItem, this.#editForm);
+    document.removeEventListener('keydown', this.#escapeKeydownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escapeKeydownHandler = (evt) => {
