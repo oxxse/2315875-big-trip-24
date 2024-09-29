@@ -82,15 +82,13 @@ export default class EventsList {
     this.#eventPresenters.forEach((presenter) => presenter.resetFormView());
   };
 
-  #handleSortChange = (evt) => {
-    if (evt.target.closest('input')) {
-      if (this.#currentSortType === evt.target.dataset.sortType) {
-        return;
-      }
-      this.#currentSortType = evt.target.dataset.sortType;
-      this.#sortEvents(this.#currentSortType);
-      this.#clearEventsList();
-      this.#renderEventsList();
+  #handleSortChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
     }
+    this.#currentSortType = sortType;
+    this.#sortEvents(this.#currentSortType);
+    this.#clearEventsList();
+    this.#renderEventsList();
   };
 }
