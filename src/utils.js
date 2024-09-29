@@ -46,7 +46,7 @@ function updateItem(items, newItem) {
 
 const getTimeDifference = ({dateFrom, dateTo}) => dayjs(dateTo).diff(dayjs(dateFrom));
 
-const sortByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+const sortByPrice = (pointA, pointB) => pointB.price - pointA.price;
 
 const sortByTime = (pointA, pointB) => getTimeDifference(pointB) - getTimeDifference(pointA);
 
