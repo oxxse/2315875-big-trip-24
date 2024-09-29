@@ -21,7 +21,7 @@ function createSortingForm(sortings) {
 export default class SortingForm extends AbstractView {
   #handleSortClick = null;
 
-  constructor({onSortChange}) {
+  constructor({ onSortChange }) {
     super();
     this.#handleSortClick = onSortChange;
 
@@ -33,6 +33,9 @@ export default class SortingForm extends AbstractView {
   }
 
   #sortClickHandler = (evt) => {
-    this.#handleSortClick(evt);
+    if (!evt.target.matches('input[name="trip-sort"]')) {
+      return;
+    }
+    this.#handleSortClick(evt.target.dataset.sortType);
   };
 }

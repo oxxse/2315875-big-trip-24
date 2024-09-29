@@ -44,12 +44,17 @@ function updateItem(items, newItem) {
   return items.map((item) => item.id === newItem.id ? newItem : item);
 }
 
-const getTimeDifference = ({dateFrom, dateTo}) => dayjs(dateTo).diff(dayjs(dateFrom));
+const getDuration = ({ dateFrom, dateTo }) => dayjs(dateTo).diff(dayjs(dateFrom));
 
 const sortByPrice = (pointA, pointB) => pointB.price - pointA.price;
 
-const sortByTime = (pointA, pointB) => getTimeDifference(pointB) - getTimeDifference(pointA);
+const sortByTime = (pointA, pointB) => {
+  const durrationPointA = getDuration(pointA.dateFrom, pointA.dateTo);
+  const durrationPointB = getDuration(pointB.dateFrom, pointB.dateTo);
+  return durrationPointB - durrationPointA;
+};
+
 
 const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
 
-export {getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration};
+export { getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration };
