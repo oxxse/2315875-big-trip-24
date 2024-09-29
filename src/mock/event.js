@@ -77,8 +77,8 @@ const events = [
   },
 ];
 
-function getRandomEvent() {
-  return getRandomArrayElement(events);
+function getEvents() {
+  return events;
 }
 
-export {getRandomEvent};
+export {getEvents};
