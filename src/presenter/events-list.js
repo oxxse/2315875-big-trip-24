@@ -1,14 +1,20 @@
 import EventList from '../view/event-list';
 import SortingForm from '../view/sorting-form';
-import EventItem from '../view/event-item';
-import PointEditForm from '../view/point-edit-form';
-import { render, replace } from '../framework/render';
+import { render } from '../framework/render';
 import NoPoints from '../view/no-points';
+import Event from './event';
+import { updateItem, sortByTime, sortByDay, sortByPrice } from '../utils';
+import { SortingType } from '../const';
 
 export default class EventsList {
   #eventListComponent = new EventList;
   #infoContainer = null;
   #eventsModel = null;
+  #eventPresenters = new Map();
+  #currentSortType = SortingType.DAY;
+  #destinationsList = [];
+  #offersList = [];
+  #eventsList = [];
 
   constructor(infoContainer, eventsModel) {
     this.#infoContainer = infoContainer;
@@ -16,11 +22,11 @@ export default class EventsList {
   }
 
   init() {
-    this.eventsList = [...this.#eventsModel.events];
-    this.offersList = [...this.#eventsModel.offers];
-    this.destinationsList = [...this.#eventsModel.destinations];
+    this.#eventsList = [...this.#eventsModel.events].sort(sortByDay);
+    this.#offersList = [...this.#eventsModel.offers];
+    this.#destinationsList = [...this.#eventsModel.destinations];
 
-    if (this.eventsList.length === 0) {
+    if (this.#eventsList.length === 0) {
       this.#renderNoPoints();
     } else {
       this.#renderSorting();
@@ -33,57 +39,58 @@ export default class EventsList {
   }
 
   #renderSorting() {
-    render(new SortingForm(), this.#infoContainer);
+    render(new SortingForm({ onSortChange: this.#handleSortChange }), this.#infoContainer);
   }
 
   #renderEventsList() {
     render(this.#eventListComponent, this.#infoContainer);
-    this.eventsList.forEach((event) => this.#renderEvent(event));
+    this.#eventsList.forEach((event) => this.#renderEvent(event));
   }
 
-  #renderEvent(point) {
-    const escapeKeydownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditFormToEvent();
-        document.removeEventListener('keydown', escapeKeydownHandler);
+  #clearEventsList() {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+  }
+
+  #renderEvent(event) {
+    const eventPresenter = new Event({
+      eventListComponent: this.#eventListComponent.element,
+      offers: this.#offersList,
+      destinations: this.#destinationsList,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
+    });
+    eventPresenter.init(event);
+    this.#eventPresenters.set(event.id, eventPresenter);
+  }
+
+  #sortEvents(sortingType) {
+    switch (sortingType) {
+      case 'time': this.#eventsList.sort(sortByTime);
+        break;
+      case 'price': this.#eventsList.sort(sortByPrice);
+        break;
+      default: this.#eventsList.sort(sortByDay);
+    }
+  }
+
+  #handlePointChange = (updatedEvent) => {
+    this.eventsList = updateItem(this.eventsList, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
+
+  #handleModeChange = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetFormView());
+  };
+
+  #handleSortChange = (evt) => {
+    if (evt.target.closest('input')) {
+      if (this.#currentSortType === evt.target.dataset.sortType) {
+        return;
       }
-    };
-
-    const showEventEditor = () => {
-      replaceEventToEditForm();
-      document.addEventListener('keydown', escapeKeydownHandler);
-    };
-
-    const hideEventEditor = () => {
-      replaceEditFormToEvent();
-      document.removeEventListener('keydown', escapeKeydownHandler);
-    };
-
-    const eventItem = new EventItem({
-      point,
-      offers: this.offersList,
-      destinations: this.destinationsList,
-      onEditClick: () => showEventEditor()
-    });
-
-    const editForm = new PointEditForm({
-      point,
-      offers: this.offersList,
-      destinations: this.destinationsList,
-      isEdit: true,
-      onFormSubmit: () => hideEventEditor(),
-      onFormReset: () => hideEventEditor()
-    });
-
-    function replaceEventToEditForm() {
-      replace(editForm, eventItem);
+      this.#currentSortType = evt.target.dataset.sortType;
+      this.#sortEvents(this.#currentSortType);
+      this.#clearEventsList();
+      this.#renderEventsList();
     }
-
-    function replaceEditFormToEvent() {
-      replace(eventItem, editForm);
-    }
-
-    render(eventItem, this.#eventListComponent.element);
-  }
+  };
 }

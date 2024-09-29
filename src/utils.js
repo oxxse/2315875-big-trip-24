@@ -40,5 +40,16 @@ const filterBy = {
   [FilterType.PAST]: (events) => events.filter((event) => dayjs().isAfter(dayjs(event.dateTo)))
 };
 
+function updateItem(items, newItem) {
+  return items.map((item) => item.id === newItem.id ? newItem : item);
+}
 
-export {getRandomArrayElement, filterBy, getRandomNumber, formatDate, calculateDuration};
+const getTimeDifference = ({dateFrom, dateTo}) => dayjs(dateTo).diff(dayjs(dateFrom));
+
+const sortByPrice = (pointA, pointB) => pointB.price - pointA.price;
+
+const sortByTime = (pointA, pointB) => getTimeDifference(pointB) - getTimeDifference(pointA);
+
+const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
+
+export {getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration};
