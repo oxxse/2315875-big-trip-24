@@ -1,10 +1,11 @@
 import { EVENT_TYPES } from '../../const';
+import { capitalizeFirstLetter } from '../../utils';
 
 function createEventTypeItem(event, type) {
   return (
     `<div class="event__type-item">
       <input id="event-type-${event}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${event}" ${event === type ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${event}" for="event-type-${event}-1">${event}</label>
+      <label class="event__type-label  event__type-label--${event}" for="event-type-${event}-1">${capitalizeFirstLetter(event)}</label>
     </div>`
   );
 }

@@ -49,12 +49,13 @@ const getDuration = ({ dateFrom, dateTo }) => dayjs(dateTo).diff(dayjs(dateFrom)
 const sortByPrice = (pointA, pointB) => pointB.price - pointA.price;
 
 const sortByTime = (pointA, pointB) => {
-  const durrationPointA = getDuration(pointA.dateFrom, pointA.dateTo);
-  const durrationPointB = getDuration(pointB.dateFrom, pointB.dateTo);
-  return durrationPointB - durrationPointA;
+  const durationPointA = getDuration(pointA.dateFrom, pointA.dateTo);
+  const durationPointB = getDuration(pointB.dateFrom, pointB.dateTo);
+  return durationPointB - durationPointA;
 };
 
+const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
 const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
 
-export { getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration };
+export { capitalizeFirstLetter, getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration };

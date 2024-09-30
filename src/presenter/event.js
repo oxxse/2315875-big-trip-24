@@ -12,7 +12,7 @@ export default class Event {
   #editForm = null;
   #handleDataChange = null;
   #handleModeChange = null;
-  #mode = Mode.DEFAULT;
+  #mode = Mode.VIEWING;
 
   constructor({ eventListComponent, offers, destinations, onDataChange, onModeChange }) {
     this.#eventListComponent = eventListComponent;
@@ -50,7 +50,7 @@ export default class Event {
       return;
     }
 
-    if (this.#mode === Mode.DEFAULT) {
+    if (this.#mode === Mode.VIEWING) {
       replace(this.#eventItem, prevEventItem);
     }
 
@@ -63,7 +63,7 @@ export default class Event {
   }
 
   resetFormView() {
-    if (this.#mode !== Mode.DEFAULT) {
+    if (this.#mode !== Mode.VIEWING) {
       this.#replaceEditFormToEvent();
     }
   }
@@ -83,14 +83,13 @@ export default class Event {
   #replaceEditFormToEvent() {
     replace(this.#eventItem, this.#editForm);
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
-    this.#mode = Mode.DEFAULT;
+    this.#mode = Mode.VIEWING;
   }
 
   #escapeKeydownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      evt.replaceEditFormToEvent();
-      document.removeEventListener('keydown', this.#escapeKeydownHandler);
+      this.#replaceEditFormToEvent();
     }
   };
 
