@@ -17,7 +17,7 @@ const FilterType = {
 };
 
 const Mode = {
-  DEFAULT: 'DEFAULT',
+  VIEWING: 'VIEWING',
   EDITING: 'EDITING'
 };
 
