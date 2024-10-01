@@ -30,8 +30,6 @@ const calculateDuration = (dateFrom, dateTo) => {
   const hours = timeDuration.hours();
   const minutes = timeDuration.minutes();
 
-  // const getFromScratch = (value) => value.toString().padStart(2, '0');
-
   let daysFormat = '';
   let hoursFormat = '';
   let minutesFormat = '';

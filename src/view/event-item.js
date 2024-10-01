@@ -23,16 +23,16 @@ function createEventItem(point, offersByType, destinations) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${formatDate(dateFrom, DateFormat.POINT_DATE)}</time>
+        <time class="event__date" datetime="${formatDate(dateFrom, DateFormat.POINT_ATTRIBUTE)}">${formatDate(dateFrom, DateFormat.POINT_DATE)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destinationItem.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(dateFrom, DateFormat.POINT_TIME)}</time>
+            <time class="event__start-time" datetime="${formatDate(dateFrom, DateFormat.FULL_POINT_ATTRIBUTE)}">${formatDate(dateFrom, DateFormat.POINT_TIME)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(dateTo, DateFormat.POINT_TIME)}</time>
+            <time class="event__end-time" datetime="${formatDate(dateTo, DateFormat.FULL_POINT_ATTRIBUTE)}">${formatDate(dateTo, DateFormat.POINT_TIME)}</time>
           </p>
           <p class="event__duration">${calculateDuration(dateFrom, dateTo)}</p>
         </div>
