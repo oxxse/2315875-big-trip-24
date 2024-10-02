@@ -6,7 +6,9 @@ const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 const DateFormat = {
   DATE_INPUT: 'DD/MM/YY HH:mm',
   POINT_TIME: 'HH:mm',
-  POINT_DATE: 'MMM DD'
+  POINT_DATE: 'MMM DD',
+  POINT_ATTRIBUTE: 'YYYY-MM-DD',
+  FULL_POINT_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm'
 };
 
 const FilterType = {
@@ -17,7 +19,7 @@ const FilterType = {
 };
 
 const Mode = {
-  DEFAULT: 'DEFAULT',
+  VIEWING: 'VIEWING',
   EDITING: 'EDITING'
 };
 

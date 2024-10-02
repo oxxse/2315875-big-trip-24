@@ -39,7 +39,7 @@ export default class EventsList {
   }
 
   #renderSorting() {
-    render(new SortingForm({ onSortChange: this.#handleSortChange }), this.#infoContainer);
+    render(new SortingForm({ onSortChange: this.#handleSortChange, currentSorting: this.#currentSortType }), this.#infoContainer);
   }
 
   #renderEventsList() {
@@ -65,16 +65,16 @@ export default class EventsList {
 
   #sortEvents(sortingType) {
     switch (sortingType) {
-      case 'time': this.#eventsList.sort(sortByTime);
+      case SortingType.TIME: this.#eventsList.sort(sortByTime);
         break;
-      case 'price': this.#eventsList.sort(sortByPrice);
+      case SortingType.PRICE: this.#eventsList.sort(sortByPrice);
         break;
       default: this.#eventsList.sort(sortByDay);
     }
   }
 
   #handlePointChange = (updatedEvent) => {
-    this.eventsList = updateItem(this.eventsList, updatedEvent);
+    this.eventsList = updateItem(this.#eventsList, updatedEvent);
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
 
@@ -82,15 +82,13 @@ export default class EventsList {
     this.#eventPresenters.forEach((presenter) => presenter.resetFormView());
   };
 
-  #handleSortChange = (evt) => {
-    if (evt.target.closest('input')) {
-      if (this.#currentSortType === evt.target.dataset.sortType) {
-        return;
-      }
-      this.#currentSortType = evt.target.dataset.sortType;
-      this.#sortEvents(this.#currentSortType);
-      this.#clearEventsList();
-      this.#renderEventsList();
+  #handleSortChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
     }
+    this.#currentSortType = sortType;
+    this.#sortEvents(this.#currentSortType);
+    this.#clearEventsList();
+    this.#renderEventsList();
   };
 }
