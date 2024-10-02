@@ -6,6 +6,8 @@ import { createOpenButton } from './templates/open-button.js';
 import { formatDate } from '../utils.js';
 import { DateFormat, BlankPoint } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(point, allOffers, destinations, isEdit) {
   const { price, dateFrom, dateTo, destination, offers, type } = point;
@@ -42,7 +44,7 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" required>
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1" required>
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
@@ -65,6 +67,8 @@ export default class PointEditForm extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleFormReset = null;
   #destination = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ event = BlankPoint, offers, destinations, isEdit, onFormSubmit, onFormReset }) {
     super();
@@ -76,7 +80,6 @@ export default class PointEditForm extends AbstractStatefulView {
     this.#isEdit = isEdit;
     this.#formResetHandler = onFormReset;
     this.#formSubmitHandler = onFormSubmit;
-
     this._restoreHandlers();
   }
 
@@ -90,6 +93,20 @@ export default class PointEditForm extends AbstractStatefulView {
     });
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
@@ -98,6 +115,9 @@ export default class PointEditForm extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
   }
 
   #formSubmitHandler = (evt) => {
@@ -128,6 +148,19 @@ export default class PointEditForm extends AbstractStatefulView {
     });
   };
 
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     const newPrice = evt.target.value;
@@ -135,6 +168,34 @@ export default class PointEditForm extends AbstractStatefulView {
       price: newPrice
     });
   };
+
+  #setDatepickerFrom() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: DateFormat.SET_DATE,
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+        maxDate: this._state.dateTo,
+      }
+    );
+  }
+
+  #setDatepickerTo() {
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: DateFormat.SET_DATE,
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler,
+        minDate: this._state.dateFrom,
+      }
+    );
+  }
 
   static parsePointToState(event, destination) {
     return {

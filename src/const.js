@@ -5,6 +5,7 @@ const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
 const DateFormat = {
   DATE_INPUT: 'DD/MM/YY HH:mm',
+  SET_DATE: 'd/m/y H:i',
   POINT_TIME: 'HH:mm',
   POINT_DATE: 'MMM DD',
   POINT_ATTRIBUTE: 'YYYY-MM-DD',
