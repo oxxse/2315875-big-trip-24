@@ -27,7 +27,7 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
             </div>
           </div>
 
-          ${createDestinationForm(type, destinationItem)}
+          ${createDestinationForm(type, destinationItem, destinations)}
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
@@ -49,46 +49,104 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
           ${isEdit ? createOpenButton() : ''}
         </header>
         <section class="event__details">
-          ${createPointOffers(pointOffers, offers)}
-          ${createPointDestination(destinationItem)}
+          ${offers.length === 0 ? '' : createPointOffers(pointOffers, offers)}
+          ${destinationItem.description ? createPointDestination(destinationItem) : ''}
         </section>
       </form>
     </li>`
   );
 }
 
-export default class PointEditForm extends AbstractView {
-  #event = [];
+export default class PointEditForm extends AbstractStatefulView {
+  #initialEvent = [];
   #offers = [];
   #destinations = [];
   #isEdit = null;
   #handleFormSubmit = null;
   #handleFormReset = null;
+  #destination = null;
 
-  constructor({ event, offers, destinations, isEdit, onFormSubmit, onFormReset }) {
+  constructor({ event = BlankPoint, offers, destinations, isEdit, onFormSubmit, onFormReset }) {
     super();
-    this.#event = event;
+    this.#initialEvent = event;
+    this.#destination = destinations.find((place) => place.id === event.destination);
+    this._setState(PointEditForm.parsePointToState(event, this.#destination.id));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#isEdit = isEdit;
     this.#formResetHandler = onFormReset;
     this.#formSubmitHandler = onFormSubmit;
 
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
+    this._restoreHandlers();
   }
 
   get template() {
-    return createPointEditForm(this.#event, this.#offers, this.#destinations, this.#isEdit);
+    return createPointEditForm(this._state, this.#offers, this.#destinations, this.#isEdit);
+  }
+
+  reset() {
+    this.updateElement({
+      ...this.#initialEvent
+    });
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
+
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(PointEditForm.parseStateToPoint(this.#initialEvent));
   };
 
-  #formResetHandler = () => {
-    this.#handleFormReset();
+  #formResetHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormReset(PointEditForm.parseStateToPoint(this.#initialEvent));
   };
+
+
+  #typeChangeHandler = (evt) => {
+    evt.preventDefault();
+    const targetType = evt.target.value;
+    this.updateElement({
+      type: targetType,
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    const targetDestination = evt.target.value;
+    const newDestination = this.#destinations.find((item) => item.name === targetDestination);
+    this.updateElement({
+      destination: newDestination.id
+    });
+  };
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    const newPrice = evt.target.value;
+    this._setState({
+      price: newPrice
+    });
+  };
+
+  static parsePointToState(event, destination) {
+    return {
+      ...event,
+      destination: destination,
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = { ...state };
+
+    return point;
+  }
+
 }
