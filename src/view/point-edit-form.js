@@ -4,8 +4,8 @@ import { createPointOffers } from './templates/point-offers.js';
 import { createPointDestination } from './templates/point-destination.js';
 import { createOpenButton } from './templates/open-button.js';
 import { formatDate } from '../utils.js';
-import { DateFormat } from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import { DateFormat, BlankPoint } from '../const.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 function createPointEditForm(point, allOffers, destinations, isEdit) {
   const { price, dateFrom, dateTo, destination, offers, type } = point;
@@ -50,7 +50,7 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
         </header>
         <section class="event__details">
           ${offers.length === 0 ? '' : createPointOffers(pointOffers, offers)}
-          ${destinationItem.description ? createPointDestination(destinationItem) : ''}
+          ${destinationItem && destinationItem.description ? createPointDestination(destinationItem) : ''}
         </section>
       </form>
     </li>`
@@ -124,7 +124,7 @@ export default class PointEditForm extends AbstractStatefulView {
     const targetDestination = evt.target.value;
     const newDestination = this.#destinations.find((item) => item.name === targetDestination);
     this.updateElement({
-      destination: newDestination.id
+      destination: newDestination ? newDestination.id : ''
     });
   };
 
