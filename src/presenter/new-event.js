@@ -24,7 +24,7 @@ export default class NewEvent {
       return;
     }
 
-    this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick})
+    this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick});
     render(this.#formComponent, this.#eventListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
