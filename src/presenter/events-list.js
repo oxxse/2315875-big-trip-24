@@ -1,6 +1,7 @@
 import EventList from '../view/event-list';
 import SortingForm from '../view/sorting-form';
-import { render, remove } from '../framework/render';
+import TripInfo from '../view/trip-info';
+import { RenderPosition, render, remove } from '../framework/render';
 import NoPoints from '../view/no-points';
 import Event from './event';
 import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
@@ -14,29 +15,26 @@ export default class EventsList {
   #offersModel = null;
   #eventPresenters = new Map();
   #currentSortType = SortingType.DAY;
-  #destinationsList = [];
-  #offersList = [];
   #sorting = null;
   #emptyList = null;
   #filtersModel = null;
   #currentFilter = null;
+  #tripInfo = null;
+  #tripInfoContainer = null;
 
-  constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel) {
+  constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainer) {
     this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#filtersModel = filtersModel;
+    this.#tripInfoContainer = tripInfoContainer;
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
-    this.#offersList = [...this.#offersModel.offers];
-    this.#destinationsList = [...this.#destinationsModel.destinations];
-    this.#currentFilter = [...this.#filtersModel.filter];
-
     this.#renderPage();
   }
 
@@ -58,24 +56,37 @@ export default class EventsList {
     return filteredEvents;
   }
 
+  get destinations() {
+    return this.#destinationsModel.destinations;
+  }
+
+  get offers() {
+    return this.#offersModel.offers;
+  }
 
   #renderPage() {
     if (this.events.length === 0) {
       this.#renderNoPoints();
     } else {
+      this.#renderTripInfo();
       this.#renderSorting();
       this.#renderEventsList();
     }
   }
 
   #renderNoPoints() {
-    this.#emptyList = new NoPoints({filterType: this.#currentFilter});
+    this.#emptyList = new NoPoints({ filterType: this.#currentFilter });
     render(this.#emptyList, this.#infoContainer);
   }
 
   #renderSorting() {
     this.#sorting = new SortingForm({ onSortChange: this.#handleSortChange, currentSorting: this.#currentSortType });
     render(this.#sorting, this.#infoContainer);
+  }
+
+  #renderTripInfo() {
+    this.#tripInfo = new TripInfo({points: this.events, destinations: this.destinations});
+    render(this.#tripInfo, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderEventsList() {
@@ -86,8 +97,8 @@ export default class EventsList {
   #renderEvent(event) {
     const eventPresenter = new Event({
       eventListComponent: this.#eventListComponent.element,
-      offers: this.#offersList,
-      destinations: this.#destinationsList,
+      offers: this.offers,
+      destinations: this.destinations,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
@@ -100,6 +111,7 @@ export default class EventsList {
     this.#eventPresenters.clear();
 
     remove(this.#sorting);
+    remove(this.#tripInfo);
 
     if (this.#emptyList) {
       remove(this.#emptyList);

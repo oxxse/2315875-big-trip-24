@@ -8,6 +8,7 @@ const DateFormat = {
   SET_DATE: 'd/m/y H:i',
   POINT_TIME: 'HH:mm',
   POINT_DATE: 'MMM DD',
+  HEADER_DATE: 'DD MMM',
   POINT_ATTRIBUTE: 'YYYY-MM-DD',
   FULL_POINT_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm'
 };
@@ -38,6 +39,8 @@ const EmptyText = {
   [FilterType.PAST]: 'There are no past events now',
   [FilterType.PRESENT]: 'There are no present events now'
 };
+
+const MAX_DESTINATIONS = 3;
 
 const UserAction = {
   UPDATE_EVENT: 'UPDATE_EVENT',
@@ -75,5 +78,6 @@ export {
   Mode,
   BLANK_POINT,
   UserAction,
-  UpdateType
+  UpdateType,
+  MAX_DESTINATIONS
 };

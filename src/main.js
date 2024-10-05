@@ -1,4 +1,3 @@
-import Header from './presenter/header';
 import EventList from './presenter/events-list';
 import EventsModel from './model/events-model';
 import DestinationsModel from './model/destinations-model';
@@ -15,10 +14,8 @@ const destinationsModel = new DestinationsModel;
 const offersModel = new OffersModel;
 const filtersModel = new FiltersModel;
 
-const headerPresenter = new Header(mainContainerElement, buttonContainerElement, eventsModel, destinationsModel);
-const eventListPresenter = new EventList(infoContainerElement, eventsModel, destinationsModel, offersModel, filtersModel);
+const eventListPresenter = new EventList(infoContainerElement, eventsModel, destinationsModel, offersModel, filtersModel, mainContainerElement, buttonContainerElement);
 const filtersPresenter = new Filter(filterContainerElement, eventsModel, filtersModel);
 
-headerPresenter.init();
 eventListPresenter.init();
 filtersPresenter.init();

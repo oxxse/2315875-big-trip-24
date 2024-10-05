@@ -52,6 +52,9 @@ const calculateDuration = (dateFrom, dateTo) => {
   return daysFormat + hoursFormat + minutesFormat;
 };
 
+
+const getDestinationById = (point, destinations) => destinations.find((destination) => destination.id === point.destination);
+
 const filterBy = {
   [FilterType.EVERYTHING]: (events) => events,
   [FilterType.FUTURE]: (events) => events.filter((event) => dayjs().isBefore(dayjs(event.dateFrom))),
@@ -75,4 +78,4 @@ const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slic
 
 const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
 
-export { capitalizeFirstLetter,getDuration, getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration };
+export { capitalizeFirstLetter,getDuration, getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration, getDestinationById };
