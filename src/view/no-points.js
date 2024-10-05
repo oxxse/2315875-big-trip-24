@@ -1,4 +1,4 @@
-import { EMPTY_TEXTS } from '../const';
+import { EmptyText } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
 function createNoPoints(texts) {
@@ -11,6 +11,6 @@ function createNoPoints(texts) {
 
 export default class NoPoints extends AbstractView {
   get template() {
-    return createNoPoints(EMPTY_TEXTS);
+    return createNoPoints(EmptyText);
   }
 }

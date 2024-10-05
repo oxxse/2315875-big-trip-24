@@ -12,7 +12,7 @@ const eventsModel = new EventsModel;
 const destinationsModel = new DestinationsModel;
 const offersModel = new OffersModel;
 
-const headerPresenter = new Header(mainContainerElement, filterContainerElement, buttonContainerElement, eventsModel, destinationsModel, offersModel);
+const headerPresenter = new Header(mainContainerElement, filterContainerElement, buttonContainerElement, eventsModel, destinationsModel);
 const eventListPresenter = new EventList(infoContainerElement, eventsModel, destinationsModel, offersModel);
 headerPresenter.init();
 eventListPresenter.init();

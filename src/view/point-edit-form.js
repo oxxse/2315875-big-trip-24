@@ -67,11 +67,12 @@ export default class PointEditForm extends AbstractStatefulView {
   #isEdit = null;
   #handleFormSubmit = null;
   #handleFormReset = null;
+  #handleEventDelete = null;
   #destination = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({ event = BLANK_POINT, offers, destinations, isEdit, onFormSubmit, onFormReset }) {
+  constructor({ event = BLANK_POINT, offers, destinations, isEdit, onFormSubmit, onFormReset, onDeleteClick }) {
     super();
     this.#initialEvent = event;
     this.#destination = destinations.find((place) => place.id === event.destination);
@@ -81,6 +82,7 @@ export default class PointEditForm extends AbstractStatefulView {
     this.#isEdit = isEdit;
     this.#handleFormReset = onFormReset;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleEventDelete = onDeleteClick;
     this._restoreHandlers();
   }
 
@@ -110,7 +112,7 @@ export default class PointEditForm extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteEventHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
 
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
@@ -131,6 +133,10 @@ export default class PointEditForm extends AbstractStatefulView {
     this.#handleFormReset(PointEditForm.parseStateToPoint(this.#initialEvent));
   };
 
+  #deleteEventHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEventDelete(PointEditForm.parseStateToPoint(this.#initialEvent));
+  };
 
   #typeChangeHandler = (evt) => {
     evt.preventDefault();
