@@ -4,15 +4,16 @@ import { createPointOffers } from './templates/point-offers.js';
 import { createPointDestination } from './templates/point-destination.js';
 import { createOpenButton } from './templates/open-button.js';
 import { formatDate } from '../utils.js';
-import { DateFormat, BlankPoint } from '../const.js';
+import { DateFormat, BLANK_POINT } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(point, allOffers, destinations, isEdit) {
   const { price, dateFrom, dateTo, destination, offers, type } = point;
-  const pointOffers = allOffers.find((offer) => offer.type === type);
+  const offersByType = allOffers.find((offer) => offer.type === type);
   const destinationItem = destinations.find((place) => place.id === destination);
+  const numberPuttern = '/d+';
 
   return (
     `<li class="trip-events__item">
@@ -44,14 +45,14 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1" required>
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1" pattern=${numberPuttern} required>
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
           ${isEdit ? createOpenButton() : ''}
         </header>
         <section class="event__details">
-          ${offers.length === 0 ? '' : createPointOffers(pointOffers, offers)}
+          ${offers.length === 0 ? '' : createPointOffers(offersByType, offers)}
           ${destinationItem && destinationItem.description ? createPointDestination(destinationItem) : ''}
         </section>
       </form>
@@ -70,7 +71,7 @@ export default class PointEditForm extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({ event = BlankPoint, offers, destinations, isEdit, onFormSubmit, onFormReset }) {
+  constructor({ event = BLANK_POINT, offers, destinations, isEdit, onFormSubmit, onFormReset }) {
     super();
     this.#initialEvent = event;
     this.#destination = destinations.find((place) => place.id === event.destination);
@@ -78,8 +79,8 @@ export default class PointEditForm extends AbstractStatefulView {
     this.#offers = offers;
     this.#destinations = destinations;
     this.#isEdit = isEdit;
-    this.#formResetHandler = onFormReset;
-    this.#formSubmitHandler = onFormSubmit;
+    this.#handleFormReset = onFormReset;
+    this.#handleFormSubmit = onFormSubmit;
     this._restoreHandlers();
   }
 
@@ -114,7 +115,7 @@ export default class PointEditForm extends AbstractStatefulView {
 
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
@@ -150,13 +151,13 @@ export default class PointEditForm extends AbstractStatefulView {
 
 
   #dateFromChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       dateFrom: userDate,
     });
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       dateTo: userDate,
     });
   };
@@ -178,7 +179,6 @@ export default class PointEditForm extends AbstractStatefulView {
         'time_24hr': true,
         defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler,
-        maxDate: this._state.dateTo,
       }
     );
   }
@@ -192,7 +192,7 @@ export default class PointEditForm extends AbstractStatefulView {
         'time_24hr': true,
         defaultDate: this._state.dateTo,
         onChange: this.#dateToChangeHandler,
-        minDate: this._state.dateFrom,
+        minDate: this._state.dateFrom
       }
     );
   }

@@ -36,7 +36,7 @@ const EMPTY_TEXTS = [ 'Click New Event to create your first point', 'There are n
 
 const MAX_OFFERS = 4;
 
-const BlankPoint = {
+const BLANK_POINT = {
   id: '',
   price: 0,
   dateFrom: '',
@@ -56,5 +56,5 @@ export {
   MAX_OFFERS,
   DateFormat,
   Mode,
-  BlankPoint
+  BLANK_POINT
 };
