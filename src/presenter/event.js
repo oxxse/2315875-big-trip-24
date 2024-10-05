@@ -32,8 +32,8 @@ export default class Event {
       event: this.#event,
       offers: this.#offers,
       destinations: this.#destinations,
-      onEditClick: this.#editButtonClickHandler,
-      onFavoriteClick: this.#favoriteButtonClickHandler
+      onEditClick: this.#handleEditButtonClick,
+      onFavoriteClick: this.#handleFavoriteButtonClick
     });
 
     this.#editForm = new PointEditForm({
@@ -41,8 +41,8 @@ export default class Event {
       offers: this.#offers,
       destinations: this.#destinations,
       isEdit: true,
-      onFormSubmit: this.#editFormSubmitHandler,
-      onFormReset: this.#editFormResetHandler
+      onFormSubmit: this.#handleFormButtonClick,
+      onFormReset: this.#handleFormButtonClick
     });
 
     if (!prevEventItem || !prevEditForm) {
@@ -89,26 +89,21 @@ export default class Event {
   #escapeKeydownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editForm.reset();
       this.#replaceEditFormToEvent();
     }
   };
 
-  #editButtonClickHandler = () => {
+  #handleEditButtonClick = () => {
     this.#replaceEventToEditForm();
   };
 
-  #favoriteButtonClickHandler = () => {
+  #handleFavoriteButtonClick = () => {
     this.#handleDataChange({ ...this.#event, isFavorite: !this.#event.isFavorite });
   };
 
-
-  #editFormSubmitHandler = () => {
+  #handleFormButtonClick = () => {
     this.#editForm.reset();
-    this.#replaceEditFormToEvent();
-    document.removeEventListener('keydown', this.#escapeKeydownHandler);
-  };
-
-  #editFormResetHandler = () => {
     this.#replaceEditFormToEvent();
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
   };
