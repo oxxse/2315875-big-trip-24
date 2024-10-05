@@ -10,21 +10,25 @@ export default class EventsList {
   #eventListComponent = new EventList;
   #infoContainer = null;
   #eventsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
   #eventPresenters = new Map();
   #currentSortType = SortingType.DAY;
   #destinationsList = [];
   #offersList = [];
   #eventsList = [];
 
-  constructor(infoContainer, eventsModel) {
+  constructor(infoContainer, eventsModel, destinationsModel, offersModel) {
     this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   init() {
     this.#eventsList = [...this.#eventsModel.events].sort(sortByDay);
-    this.#offersList = [...this.#eventsModel.offers];
-    this.#destinationsList = [...this.#eventsModel.destinations];
+    this.#offersList = [...this.#offersModel.offers];
+    this.#destinationsList = [...this.#destinationsModel.destinations];
 
     if (this.#eventsList.length === 0) {
       this.#renderNoPoints();
