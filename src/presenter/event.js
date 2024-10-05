@@ -101,7 +101,9 @@ export default class Event {
     this.#handleDataChange({ ...this.#event, isFavorite: !this.#event.isFavorite });
   };
 
+
   #editFormSubmitHandler = () => {
+    this.#editForm.reset();
     this.#replaceEditFormToEvent();
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
   };

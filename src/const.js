@@ -1,10 +1,11 @@
 
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-
+const DEFAULT_TYPE = 'flight';
 const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
 const DateFormat = {
   DATE_INPUT: 'DD/MM/YY HH:mm',
+  SET_DATE: 'd/m/y H:i',
   POINT_TIME: 'HH:mm',
   POINT_DATE: 'MMM DD',
   POINT_ATTRIBUTE: 'YYYY-MM-DD',
@@ -35,6 +36,17 @@ const EMPTY_TEXTS = [ 'Click New Event to create your first point', 'There are n
 
 const MAX_OFFERS = 4;
 
+const BlankPoint = {
+  id: '',
+  price: 0,
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: DEFAULT_TYPE,
+};
+
 export {
   EMPTY_TEXTS,
   SortingType,
@@ -43,5 +55,6 @@ export {
   EVENT_TYPES,
   MAX_OFFERS,
   DateFormat,
-  Mode
+  Mode,
+  BlankPoint
 };
