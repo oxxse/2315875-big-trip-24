@@ -79,5 +79,6 @@ export {
   BLANK_POINT,
   UserAction,
   UpdateType,
-  MAX_DESTINATIONS
+  MAX_DESTINATIONS,
+  DEFAULT_TYPE
 };

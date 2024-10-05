@@ -10,6 +10,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(point, allOffers, destinations, isEdit) {
+
   const { price, dateFrom, dateTo, destination, offers, type } = point;
   const offersByType = allOffers.find((offer) => offer.type === type);
   const destinationItem = destinations.find((place) => place.id === destination);
@@ -52,7 +53,7 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
           ${isEdit ? createOpenButton() : ''}
         </header>
         <section class="event__details">
-          ${offers.length === 0 ? '' : createPointOffers(offersByType, offers)}
+          ${offersByType.length === 0 ? '' : createPointOffers(offersByType, offers)}
           ${destinationItem && destinationItem.description ? createPointDestination(destinationItem) : ''}
         </section>
       </form>
@@ -75,15 +76,22 @@ export default class PointEditForm extends AbstractStatefulView {
   constructor({ event = BLANK_POINT, offers, destinations, isEdit, onFormSubmit, onFormReset, onDeleteClick }) {
     super();
     this.#initialEvent = event;
-    this.#destination = destinations.find((place) => place.id === event.destination);
-    this._setState(PointEditForm.parsePointToState(event, this.#destination.id));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#isEdit = isEdit;
     this.#handleFormReset = onFormReset;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEventDelete = onDeleteClick;
+
+    if (isEdit) {
+      this.#destination = destinations.find((place) => place.id === event.destination);
+      this._setState(PointEditForm.parsePointToState(event, this.#destination.id));
+    } else {
+      this._setState(PointEditForm.parsePointToState(event, event.destination));
+    }
+
     this._restoreHandlers();
+
   }
 
   get template() {
@@ -113,11 +121,14 @@ export default class PointEditForm extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteEventHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
 
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+
+    if (this.#isEdit) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
+    }
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
@@ -125,7 +136,7 @@ export default class PointEditForm extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(PointEditForm.parseStateToPoint(this.#initialEvent));
+    this.#handleFormSubmit(PointEditForm.parseStateToPoint(this._state));
   };
 
   #formResetHandler = (evt) => {

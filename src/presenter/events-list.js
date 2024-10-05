@@ -5,7 +5,8 @@ import { RenderPosition, render, remove } from '../framework/render';
 import NoPoints from '../view/no-points';
 import Event from './event';
 import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
-import { SortingType, UpdateType, UserAction } from '../const';
+import { FilterType, SortingType, UpdateType, UserAction } from '../const';
+import NewEvent from './new-event';
 
 export default class EventsList {
   #eventListComponent = new EventList;
@@ -21,14 +22,16 @@ export default class EventsList {
   #currentFilter = null;
   #tripInfo = null;
   #tripInfoContainer = null;
+  #newEventPresenter = null;
 
-  constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainer) {
+  constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainer, onNewPointDestroy) {
     this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#filtersModel = filtersModel;
     this.#tripInfoContainer = tripInfoContainer;
+    this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
@@ -62,6 +65,17 @@ export default class EventsList {
 
   get offers() {
     return this.#offersModel.offers;
+  }
+
+  createEvent() {
+    if (this.#emptyList) {
+      remove(this.#emptyList);
+    }
+
+    this.#currentSortType = SortingType.DAY;
+    this.#currentFilter = FilterType.EVERYTHING;
+    this.#filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventPresenter.init();
   }
 
   #renderPage() {
@@ -107,6 +121,7 @@ export default class EventsList {
   }
 
   #clearPage(resetSortingType = false) {
+    this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
 
@@ -137,6 +152,7 @@ export default class EventsList {
   };
 
   #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.resetFormView());
   };
 
