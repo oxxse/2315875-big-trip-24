@@ -3,7 +3,7 @@ import SortingForm from '../view/sorting-form';
 import { render, remove } from '../framework/render';
 import NoPoints from '../view/no-points';
 import Event from './event';
-import { sortByTime, sortByDay, sortByPrice } from '../utils';
+import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
 import { SortingType, UpdateType, UserAction } from '../const';
 
 export default class EventsList {
@@ -18,38 +18,46 @@ export default class EventsList {
   #offersList = [];
   #sorting = null;
   #emptyList = null;
+  #filtersModel = null;
+  #currentFilter = null;
 
-  constructor(infoContainer, eventsModel, destinationsModel, offersModel) {
+  constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel) {
     this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
+    this.#filtersModel = filtersModel;
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
-  }
-
-  get events() {
-    const events = this.#eventsModel.events;
-
-    switch (this.#currentSortType) {
-      case SortingType.TIME:
-        events.sort(sortByTime);
-        break;
-      case SortingType.PRICE:
-        events.sort(sortByPrice);
-        break;
-      default: events.sort(sortByDay);
-    }
-
-    return events;
+    this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
     this.#offersList = [...this.#offersModel.offers];
     this.#destinationsList = [...this.#destinationsModel.destinations];
+    this.#currentFilter = [...this.#filtersModel.filter];
 
     this.#renderPage();
   }
+
+  get events() {
+    this.#currentFilter = this.#filtersModel.filter;
+    const events = this.#eventsModel.events;
+    const filteredEvents = filterBy[this.#currentFilter](events);
+
+    switch (this.#currentSortType) {
+      case SortingType.TIME:
+        filteredEvents.sort(sortByTime);
+        break;
+      case SortingType.PRICE:
+        filteredEvents.sort(sortByPrice);
+        break;
+      default: filteredEvents.sort(sortByDay);
+    }
+
+    return filteredEvents;
+  }
+
 
   #renderPage() {
     if (this.events.length === 0) {
@@ -61,7 +69,7 @@ export default class EventsList {
   }
 
   #renderNoPoints() {
-    this.#emptyList = new NoPoints();
+    this.#emptyList = new NoPoints({filterType: this.#currentFilter});
     render(this.#emptyList, this.#infoContainer);
   }
 

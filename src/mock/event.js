@@ -30,8 +30,8 @@ const events = [
   {
     id: '3',
     price: 100,
-    dateFrom: new Date('2023-12-20').toISOString(),
-    dateTo: new Date('2023-12-21').toISOString(),
+    dateFrom: new Date('2025-12-20').toISOString(),
+    dateTo: new Date('2025-12-21').toISOString(),
     destination: `${getRandomNumber(1, 5)}`,
     isFavorite: false,
     offers: [
