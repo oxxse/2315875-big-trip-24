@@ -37,10 +37,6 @@ export default class EventsList {
     this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
-  init() {
-    this.#renderPage();
-  }
-
   get events() {
     this.#currentFilter = this.#filtersModel.filter;
     const events = this.#eventsModel.events;
@@ -65,6 +61,10 @@ export default class EventsList {
 
   get offers() {
     return this.#offersModel.offers;
+  }
+
+  init() {
+    this.#renderPage();
   }
 
   createEvent() {
@@ -99,7 +99,7 @@ export default class EventsList {
   }
 
   #renderTripInfo() {
-    this.#tripInfo = new TripInfo({points: this.events, destinations: this.destinations});
+    this.#tripInfo = new TripInfo({ points: this.events, destinations: this.destinations });
     render(this.#tripInfo, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
   }
 

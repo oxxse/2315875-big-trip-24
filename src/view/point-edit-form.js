@@ -7,6 +7,7 @@ import { formatDate } from '../utils.js';
 import { DateFormat, BLANK_POINT } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
+import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(point, allOffers, destinations, isEdit) {
@@ -14,7 +15,7 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
   const { price, dateFrom, dateTo, destination, offers, type } = point;
   const offersByType = allOffers.find((offer) => offer.type === type);
   const destinationItem = destinations.find((place) => place.id === destination);
-  const numberPuttern = '/d+';
+  const numberPattern = '/d+';
 
   return (
     `<li class="trip-events__item">
@@ -46,7 +47,7 @@ function createPointEditForm(point, allOffers, destinations, isEdit) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1" pattern=${numberPuttern} required>
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${he.encode(price)}" min="1" pattern=${numberPattern} required>
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
