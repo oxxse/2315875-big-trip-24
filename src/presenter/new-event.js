@@ -45,7 +45,7 @@ export default class NewEvent {
 
   #handleFormSubmit = (event) => {
     this.#handleDataChange(
-      UserAction.ADD_POINT,
+      UserAction.ADD_EVENT,
       UpdateType.MAJOR,
       {...event, id: nanoid()},
     );

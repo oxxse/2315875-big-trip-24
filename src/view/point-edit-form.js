@@ -125,6 +125,7 @@ export default class PointEditForm extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerSelectHandler);
 
     if (this.#isEdit) {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
@@ -184,6 +185,14 @@ export default class PointEditForm extends AbstractStatefulView {
     const newPrice = evt.target.value;
     this._setState({
       price: newPrice
+    });
+  };
+
+  #offerSelectHandler = () => {
+    const checkedOffersElement = this.element.querySelectorAll('.event__offer-checkbox:checked');
+    const checkedOffersById = Array.from(checkedOffersElement).map((item) => item.dataset.offerId);
+    this._setState({
+      offers: checkedOffersById
     });
   };
 
