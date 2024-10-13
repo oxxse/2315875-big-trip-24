@@ -1,7 +1,7 @@
 import EventItem from '../view/event-item';
 import PointEditForm from '../view/point-edit-form';
 import { remove, render, replace } from '../framework/render';
-import { Mode } from '../const';
+import { Mode, UpdateType, UserAction } from '../const';
 
 export default class Event {
   #eventListComponent = null;
@@ -42,7 +42,8 @@ export default class Event {
       destinations: this.#destinations,
       isEdit: true,
       onFormSubmit: this.#handleFormButtonClick,
-      onFormReset: this.#handleFormButtonClick
+      onFormReset: this.#handleFormButtonClick,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (!prevEventItem || !prevEditForm) {
@@ -99,12 +100,16 @@ export default class Event {
   };
 
   #handleFavoriteButtonClick = () => {
-    this.#handleDataChange({ ...this.#event, isFavorite: !this.#event.isFavorite });
+    this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, { ...this.#event, isFavorite: !this.#event.isFavorite });
   };
 
-  #handleFormButtonClick = () => {
-    this.#editForm.reset();
+  #handleFormButtonClick = (updateItem) => {
+    this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR, updateItem);
     this.#replaceEditFormToEvent();
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
+  };
+
+  #handleDeleteClick = (event) => {
+    this.#handleDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, event);
   };
 }

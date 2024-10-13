@@ -8,6 +8,7 @@ const DateFormat = {
   SET_DATE: 'd/m/y H:i',
   POINT_TIME: 'HH:mm',
   POINT_DATE: 'MMM DD',
+  HEADER_DATE: 'DD MMM',
   POINT_ATTRIBUTE: 'YYYY-MM-DD',
   FULL_POINT_ATTRIBUTE: 'YYYY-MM-DD[T]HH:mm'
 };
@@ -32,7 +33,20 @@ const SortingType = {
   OFFER: 'offer'
 };
 
-const EMPTY_TEXTS = [ 'Click New Event to create your first point', 'There are no past events now', 'There are no present events now', 'There are no future events now'];
+const EmptyText = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.PRESENT]: 'There are no present events now'
+};
+
+const MAX_DESTINATIONS = 3;
+
+const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+  ADD_EVENT: 'ADD_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
+};
 
 const MAX_OFFERS = 4;
 
@@ -47,8 +61,14 @@ const BLANK_POINT = {
   type: DEFAULT_TYPE,
 };
 
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 export {
-  EMPTY_TEXTS,
+  EmptyText,
   SortingType,
   FilterType,
   DESTINATIONS,
@@ -56,5 +76,9 @@ export {
   MAX_OFFERS,
   DateFormat,
   Mode,
-  BLANK_POINT
+  BLANK_POINT,
+  UserAction,
+  UpdateType,
+  MAX_DESTINATIONS,
+  DEFAULT_TYPE
 };
