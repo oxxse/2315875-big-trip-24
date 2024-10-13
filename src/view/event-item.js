@@ -15,7 +15,6 @@ function createSelectedOfferItem(offer) {
 }
 
 function createEventItem(point, offersByType, destinations) {
-
   const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
   const destinationItem = destinations.find((place) => place.id === destination);
   const offersData = offersByType.find((offer) => offer.type === type);
@@ -41,7 +40,7 @@ function createEventItem(point, offersByType, destinations) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${offersData.offersData.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
+        ${offersData.offers.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
         ${createFavoriteButton(isFavorite)}
         ${createOpenButton()}
       </div>

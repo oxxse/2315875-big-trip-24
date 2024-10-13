@@ -8,14 +8,6 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(duration);
 
-function getRandomNumber(min = 1, max = 100) {
-  return Math.floor(min + Math.random() * (max + 1 - min));
-}
-
-function getRandomArrayElement(items) {
-  return items[getRandomNumber(0, items.length - 1)];
-}
-
 function formatDate(date, dateFormat) {
   return date ? dayjs(date).format(dateFormat) : '';
 }
@@ -78,4 +70,4 @@ const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slic
 
 const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
 
-export { capitalizeFirstLetter,getDuration, getRandomArrayElement, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, getRandomNumber, formatDate, calculateDuration, getDestinationById };
+export { capitalizeFirstLetter,getDuration, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, formatDate, calculateDuration, getDestinationById };

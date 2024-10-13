@@ -7,6 +7,7 @@ import Event from './event';
 import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
 import { FilterType, SortingType, UpdateType, UserAction } from '../const';
 import NewEvent from './new-event';
+import Loader from '../view/loader';
 
 export default class EventsList {
   #eventListComponent = new EventList;
@@ -23,6 +24,8 @@ export default class EventsList {
   #tripInfo = null;
   #tripInfoContainer = null;
   #newEventPresenter = null;
+  #loader = null;
+  #isLoading = true;
 
   constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainer, onNewPointDestroy) {
     this.#infoContainer = infoContainer;
@@ -79,23 +82,33 @@ export default class EventsList {
   }
 
   #renderPage() {
+    if (this.#isLoading) {
+      this.#renderLoader();
+      return;
+    }
+
     if (this.events.length === 0) {
       this.#renderNoPoints();
     } else {
+      this.#renderEventsList();
       this.#renderTripInfo();
       this.#renderSorting();
-      this.#renderEventsList();
     }
+  }
+
+  #renderLoader() {
+    this.#loader = new Loader();
+    render(this.#loader, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderNoPoints() {
     this.#emptyList = new NoPoints({ filterType: this.#currentFilter });
-    render(this.#emptyList, this.#infoContainer);
+    render(this.#emptyList, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderSorting() {
     this.#sorting = new SortingForm({ onSortChange: this.#handleSortChange, currentSorting: this.#currentSortType });
-    render(this.#sorting, this.#infoContainer);
+    render(this.#sorting, this.#infoContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripInfo() {
@@ -127,6 +140,7 @@ export default class EventsList {
 
     remove(this.#sorting);
     remove(this.#tripInfo);
+    remove(this.#loader);
 
     if (this.#emptyList) {
       remove(this.#emptyList);
@@ -176,6 +190,11 @@ export default class EventsList {
         break;
       case UpdateType.MAJOR:
         this.#clearPage({ resetSortingType: true });
+        this.#renderPage();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loader);
         this.#renderPage();
         break;
     }

@@ -6,16 +6,21 @@ import FiltersModel from './model/filters-model';
 import Filter from './presenter/filter';
 import NewEventButton from './view/new-event-button';
 import { render } from './framework/render';
+import EventsApiService from './service/events-api-service';
+import { AUTHORIZATION, END_POINT } from './const';
 
 const mainContainerElement = document.querySelector('.trip-main');
 const filterContainerElement = document.querySelector('.trip-controls__filters');
 const infoContainerElement = document.querySelector('.trip-events');
 const buttonContainerElement = document.querySelector('.trip-main');
-const eventsModel = new EventsModel;
-const destinationsModel = new DestinationsModel;
-const offersModel = new OffersModel;
-const filtersModel = new FiltersModel;
-const newPointButtonComponent = new NewEventButton({onClick: handleNewPointButtonClick});
+
+const eventsApiService = new EventsApiService(END_POINT, AUTHORIZATION);
+
+const destinationsModel = new DestinationsModel({ eventsApiService });
+const offersModel = new OffersModel({ eventsApiService });
+const eventsModel = new EventsModel({ eventsApiService, offersModel, destinationsModel });
+const filtersModel = new FiltersModel();
+const newPointButtonComponent = new NewEventButton({ onClick: handleNewPointButtonClick });
 
 const eventListPresenter = new EventList(infoContainerElement, eventsModel, destinationsModel, offersModel, filtersModel, mainContainerElement, handleNewPointFormClose);
 const filtersPresenter = new Filter(filterContainerElement, eventsModel, filtersModel);
@@ -29,7 +34,7 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, buttonContainerElement);
-
 eventListPresenter.init();
 filtersPresenter.init();
+eventsModel.init()
+  .finally(() => render(newPointButtonComponent, buttonContainerElement));

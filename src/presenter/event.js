@@ -24,7 +24,6 @@ export default class Event {
 
   init(event) {
     this.#event = event;
-
     const prevEventItem = this.#eventItem;
     const prevEditForm = this.#editForm;
 

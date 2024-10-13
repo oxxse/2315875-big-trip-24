@@ -8,7 +8,7 @@ function createLoader() {
   );
 }
 
-export default class Error extends AbstractView {
+export default class Loader extends AbstractView {
   get template() {
     return createLoader();
   }
