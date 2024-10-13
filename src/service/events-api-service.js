@@ -22,14 +22,35 @@ export default class EventsApiService extends ApiService {
       url: `points/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
-      headers: new Headers({'Content-Type': 'application/json'})
+      headers: new Headers({ 'Content-Type': 'application/json' })
     });
 
     return await ApiService.parseResponse(response);
   }
 
+  async addEvent(point) {
+    const response = await this._load({
+      url: 'points',
+      method: Method.POST,
+      body: JSON.stringify(this.#adaptToServer(point)),
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    });
+
+    return await ApiService.parseResponse(response);
+  }
+
+  async deleteEvent(point) {
+    const response = await this._load({
+      url: `points/${point.id}`,
+      method: Method.DELETE
+    });
+
+    return response;
+  }
+
   #adaptToServer(point) {
-    const adaptedPoint = {...point,
+    const adaptedPoint = {
+      ...point,
       'base_price': point.price,
       'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
       'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null,

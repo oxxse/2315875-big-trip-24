@@ -5,7 +5,14 @@ const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
 const Method = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
 };
 
 const DateFormat = {
@@ -93,5 +100,6 @@ export {
   DEFAULT_TYPE,
   Method,
   AUTHORIZATION,
-  END_POINT
+  END_POINT,
+  TimeLimit
 };

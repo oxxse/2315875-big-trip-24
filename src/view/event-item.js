@@ -26,7 +26,7 @@ function createEventItem(point, offersByType, destinations) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destinationItem.name}</h3>
+        <h3 class="event__title">${type} ${destinationItem ? destinationItem.name : ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${formatDate(dateFrom, DateFormat.FULL_POINT_ATTRIBUTE)}">${formatDate(dateFrom, DateFormat.POINT_TIME)}</time>

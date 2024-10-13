@@ -40,8 +40,8 @@ export default class Event {
       offers: this.#offers,
       destinations: this.#destinations,
       isEdit: true,
-      onFormSubmit: this.#handleFormButtonClick,
-      onFormReset: this.#handleFormButtonClick,
+      onFormSubmit: this.#handleSubmitClick,
+      onFormReset: this.#handleResetClick,
       onDeleteClick: this.#handleDeleteClick
     });
 
@@ -56,6 +56,7 @@ export default class Event {
 
     if (this.#mode === Mode.EDITING) {
       replace(this.#editForm, prevEditForm);
+      this.#mode = Mode.VIEWING;
     }
 
     remove(prevEventItem);
@@ -66,6 +67,43 @@ export default class Event {
     if (this.#mode !== Mode.VIEWING) {
       this.#replaceEditFormToEvent();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editForm.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editForm.updateElement({
+        isDisabled: true,
+        isDeleting: true
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.VIEWING) {
+      this.#editForm.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#editForm = () => {
+        this.#editForm.updateElement({
+          isDisabled: true,
+          isSaving: false,
+          isDeleting: false
+        });
+      };
+    };
+
+    this.#editForm.shake(resetFormState);
   }
 
   destroy() {
@@ -102,8 +140,13 @@ export default class Event {
     this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.PATCH, { ...this.#event, isFavorite: !this.#event.isFavorite });
   };
 
-  #handleFormButtonClick = (updateItem) => {
+  #handleSubmitClick = (updateItem) => {
     this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR, updateItem);
+    document.removeEventListener('keydown', this.#escapeKeydownHandler);
+  };
+
+  #handleResetClick = () => {
+    this.#editForm.reset(this.#event);
     this.#replaceEditFormToEvent();
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
   };
