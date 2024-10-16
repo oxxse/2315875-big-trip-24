@@ -68,7 +68,7 @@ function createPointEditForm(state, allOffers, destinations, isEdit) {
           ${isEdit ? createOpenButton() : ''}
         </header>
         <section class="event__details">
-          ${offersByType.length === 0 ? '' : createPointOffers(offersByType, offers, isDisabled)}
+          ${offersByType.offers.length === 0 ? '' : createPointOffers(offersByType, offers, isDisabled)}
           ${destinationItem && destinationItem.description ? createPointDestination(destinationItem) : ''}
         </section>
       </form>
@@ -141,7 +141,7 @@ export default class PointEditForm extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerSelectHandler);
+    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerSelectHandler);
 
     if (this.#isEdit) {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
