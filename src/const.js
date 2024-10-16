@@ -63,7 +63,6 @@ const UserAction = {
 const MAX_OFFERS = 4;
 
 const BLANK_POINT = {
-  id: '',
   price: 0,
   dateFrom: '',
   dateTo: '',

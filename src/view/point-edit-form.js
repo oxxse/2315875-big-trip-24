@@ -114,6 +114,7 @@ export default class PointEditForm extends AbstractStatefulView {
   }
 
   reset() {
+    this.element.querySelectorAll('.event__input').forEach((input) => input.blur());
     this.updateElement({
       ...this.#initialEvent
     });
@@ -199,7 +200,7 @@ export default class PointEditForm extends AbstractStatefulView {
     evt.preventDefault();
     const newPrice = evt.target.value;
     this._setState({
-      price: newPrice
+      price: parseInt(newPrice, 10)
     });
   };
 
