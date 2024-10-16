@@ -68,7 +68,6 @@ export default class EventItem extends AbstractView {
   }
 
   get template() {
-    console.log(this.#offersData);
     return createEventItem(this.#event, this.#offersData, this.#destinations);
   }
 
