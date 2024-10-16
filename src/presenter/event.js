@@ -29,7 +29,7 @@ export default class Event {
 
     this.#eventItem = new EventItem({
       event: this.#event,
-      offers: this.#offers,
+      offersData: this.#offers,
       destinations: this.#destinations,
       onEditClick: this.#handleEditButtonClick,
       onFavoriteClick: this.#handleFavoriteButtonClick
