@@ -5,8 +5,10 @@ import { RenderPosition, render, remove } from '../framework/render';
 import NoPoints from '../view/no-points';
 import Event from './event';
 import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
-import { FilterType, SortingType, UpdateType, UserAction } from '../const';
+import { FilterType, SortingType, TimeLimit, UpdateType, UserAction } from '../const';
 import NewEvent from './new-event';
+import Loader from '../view/loader';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 export default class EventsList {
   #eventListComponent = new EventList;
@@ -23,6 +25,12 @@ export default class EventsList {
   #tripInfo = null;
   #tripInfoContainer = null;
   #newEventPresenter = null;
+  #loader = null;
+  #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainer, onNewPointDestroy) {
     this.#infoContainer = infoContainer;
@@ -55,12 +63,12 @@ export default class EventsList {
     return filteredEvents;
   }
 
-  get destinations() {
-    return this.#destinationsModel.destinations;
-  }
-
   get offers() {
     return this.#offersModel.offers;
+  }
+
+  get destinations() {
+    return this.#destinationsModel.destinations;
   }
 
   init() {
@@ -79,23 +87,33 @@ export default class EventsList {
   }
 
   #renderPage() {
+    if (this.#isLoading) {
+      this.#renderLoader();
+      return;
+    }
+
     if (this.events.length === 0) {
       this.#renderNoPoints();
     } else {
+      this.#renderEventsList();
       this.#renderTripInfo();
       this.#renderSorting();
-      this.#renderEventsList();
     }
+  }
+
+  #renderLoader() {
+    this.#loader = new Loader();
+    render(this.#loader, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderNoPoints() {
     this.#emptyList = new NoPoints({ filterType: this.#currentFilter });
-    render(this.#emptyList, this.#infoContainer);
+    render(this.#emptyList, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderSorting() {
     this.#sorting = new SortingForm({ onSortChange: this.#handleSortChange, currentSorting: this.#currentSortType });
-    render(this.#sorting, this.#infoContainer);
+    render(this.#sorting, this.#infoContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripInfo() {
@@ -127,6 +145,7 @@ export default class EventsList {
 
     remove(this.#sorting);
     remove(this.#tripInfo);
+    remove(this.#loader);
 
     if (this.#emptyList) {
       remove(this.#emptyList);
@@ -135,20 +154,41 @@ export default class EventsList {
     if (resetSortingType) {
       this.#currentSortType = SortingType.DAY;
     }
+
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+    }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this.#eventsModel.updateEvent(updateType, update);
+        this.#eventPresenters.get(update.id).setSaving();
+        try {
+          await this.#eventsModel.updateEvent(updateType, update);
+        } catch (error) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_EVENT:
-        this.#eventsModel.addEvent(updateType, update);
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#eventsModel.addEvent(updateType, update);
+        } catch (error) {
+          this.#newEventPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_EVENT:
-        this.#eventsModel.deleteEvent(updateType, update);
+        this.#eventPresenters.get(update.id).setDeleting();
+        try {
+          await this.#eventsModel.deleteEvent(updateType, update);
+        } catch (error) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModeChange = () => {
@@ -176,6 +216,11 @@ export default class EventsList {
         break;
       case UpdateType.MAJOR:
         this.#clearPage({ resetSortingType: true });
+        this.#renderPage();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loader);
         this.#renderPage();
         break;
     }

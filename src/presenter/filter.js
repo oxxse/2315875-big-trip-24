@@ -14,6 +14,7 @@ export default class Filter {
     this.#filtersModel = filtersModel;
 
     this.#eventsModel.addObserver(this.#handleEventsChange);
+    this.#filtersModel.addObserver(this.#handleEventsChange);
   }
 
   get events() {

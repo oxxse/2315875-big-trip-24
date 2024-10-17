@@ -3,6 +3,18 @@ const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-i
 const DEFAULT_TYPE = 'flight';
 const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};
+
 const DateFormat = {
   DATE_INPUT: 'DD/MM/YY HH:mm',
   SET_DATE: 'd/m/y H:i',
@@ -51,7 +63,6 @@ const UserAction = {
 const MAX_OFFERS = 4;
 
 const BLANK_POINT = {
-  id: '',
   price: 0,
   dateFrom: '',
   dateTo: '',
@@ -65,7 +76,12 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
+
+const AUTHORIZATION = 'Basic ofv23Pdd45dPPd0s1';
+
+const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 
 export {
   EmptyText,
@@ -80,5 +96,9 @@ export {
   UserAction,
   UpdateType,
   MAX_DESTINATIONS,
-  DEFAULT_TYPE
+  DEFAULT_TYPE,
+  Method,
+  AUTHORIZATION,
+  END_POINT,
+  TimeLimit
 };

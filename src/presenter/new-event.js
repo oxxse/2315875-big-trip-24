@@ -1,7 +1,6 @@
 import {UserAction, UpdateType } from '../const';
 import PointEditForm from '../view/point-edit-form';
 import { RenderPosition, render, remove } from '../framework/render';
-import { nanoid } from 'nanoid';
 
 export default class NewEvent {
   #eventListContainer = null;
@@ -30,6 +29,21 @@ export default class NewEvent {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#formComponent.updateElement({isSaving: true});
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#formComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    this.#formComponent.shake(resetFormState);
+  }
+
   destroy() {
     if (this.#formComponent === null) {
       return;
@@ -47,9 +61,8 @@ export default class NewEvent {
     this.#handleDataChange(
       UserAction.ADD_EVENT,
       UpdateType.MAJOR,
-      {...event, id: nanoid()},
+      event
     );
-    this.destroy();
   };
 
   #handleCancelClick = () => {

@@ -14,11 +14,10 @@ function createSelectedOfferItem(offer) {
   );
 }
 
-function createEventItem(point, offersByType, destinations) {
-
-  const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
+function createEventItem(event, offersData, destinations) {
+  const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = event;
   const destinationItem = destinations.find((place) => place.id === destination);
-  const offersData = offersByType.find((offer) => offer.type === type);
+  const offersByType = offersData.find((offer) => offer.type === type);
 
   return (
     `<li class="trip-events__item">
@@ -27,7 +26,7 @@ function createEventItem(point, offersByType, destinations) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destinationItem.name}</h3>
+        <h3 class="event__title">${type} ${destinationItem ? destinationItem.name : ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${formatDate(dateFrom, DateFormat.FULL_POINT_ATTRIBUTE)}">${formatDate(dateFrom, DateFormat.POINT_TIME)}</time>
@@ -41,7 +40,7 @@ function createEventItem(point, offersByType, destinations) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${offersData.offersData.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
+        ${offersByType.offers.map((offer) => offers.includes(offer.id) ? createSelectedOfferItem(offer) : '').join('')}</ul>
         ${createFavoriteButton(isFavorite)}
         ${createOpenButton()}
       </div>
@@ -51,15 +50,15 @@ function createEventItem(point, offersByType, destinations) {
 
 export default class EventItem extends AbstractView {
   #event = [];
-  #offers = [];
+  #offersData = [];
   #destinations = [];
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({ event, offers, destinations, onEditClick, onFavoriteClick }) {
+  constructor({ event, offersData, destinations, onEditClick, onFavoriteClick }) {
     super();
     this.#event = event;
-    this.#offers = offers;
+    this.#offersData = offersData;
     this.#destinations = destinations;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
@@ -69,7 +68,7 @@ export default class EventItem extends AbstractView {
   }
 
   get template() {
-    return createEventItem(this.#event, this.#offers, this.#destinations);
+    return createEventItem(this.#event, this.#offersData, this.#destinations);
   }
 
   #editClickHandler = () => {
