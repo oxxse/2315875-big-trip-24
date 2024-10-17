@@ -89,18 +89,16 @@ export default class Event {
 
   setAborting() {
     if (this.#mode === Mode.VIEWING) {
-      this.#editForm.shake();
+      this.#eventItem.shake();
       return;
     }
 
     const resetFormState = () => {
-      this.#editForm = () => {
         this.#editForm.updateElement({
           isDisabled: true,
           isSaving: false,
           isDeleting: false
         });
-      };
     };
 
     this.#editForm.shake(resetFormState);
