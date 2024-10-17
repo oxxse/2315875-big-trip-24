@@ -16,8 +16,8 @@ const buttonContainerElement = document.querySelector('.trip-main');
 
 const eventsApiService = new EventsApiService(END_POINT, AUTHORIZATION);
 
-const destinationsModel = new DestinationsModel({ eventsApiService });
 const offersModel = new OffersModel({ eventsApiService });
+const destinationsModel = new DestinationsModel({ eventsApiService });
 const eventsModel = new EventsModel({ eventsApiService, offersModel, destinationsModel });
 const filtersModel = new FiltersModel();
 const newPointButtonComponent = new NewEventButton({ onClick: handleNewPointButtonClick });
