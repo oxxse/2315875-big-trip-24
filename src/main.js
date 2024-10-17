@@ -34,7 +34,7 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-eventListPresenter.init();
-filtersPresenter.init();
 eventsModel.init()
   .finally(() => render(newPointButtonComponent, buttonContainerElement));
+eventListPresenter.init();
+filtersPresenter.init();
