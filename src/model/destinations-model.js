@@ -13,9 +13,8 @@ export default class DestinationsModel extends Observable {
     return this.#destinations;
   }
 
-  init() {
-    this.#eventsApiService.destinations.then((destinations) => {
-      this.#destinations = destinations;
-    }).catch((err) => err);
+  async init() {
+    this.#destinations = await this.#eventsApiService.destinations;
+    return this.#destinations;
   }
 }

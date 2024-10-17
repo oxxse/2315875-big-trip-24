@@ -13,9 +13,8 @@ export default class OffersModel extends Observable {
     return this.#offers;
   }
 
-  init() {
-    this.#eventsApiService.offers.then((offers) => {
-      this.#offers = offers;
-    }).catch((err) => err);
+  async init() {
+    this.#offers = await this.#eventsApiService.offers;
+    return this.#offers;
   }
 }

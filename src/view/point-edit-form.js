@@ -7,7 +7,6 @@ import { formatDate } from '../utils.js';
 import { DateFormat, BLANK_POINT } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
-import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(state, allOffers, destinations, isEdit) {
