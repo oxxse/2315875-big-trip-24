@@ -35,6 +35,8 @@ function handleNewPointButtonClick() {
 }
 
 eventsModel.init()
-  .finally(() => render(newPointButtonComponent, buttonContainerElement));
-eventListPresenter.init();
-filtersPresenter.init();
+  .finally(() => {
+    render(newPointButtonComponent, buttonContainerElement);
+    eventListPresenter.init();
+    filtersPresenter.init();
+  });
