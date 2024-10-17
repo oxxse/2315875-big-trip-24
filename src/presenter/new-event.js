@@ -1,4 +1,4 @@
-import {UserAction, UpdateType } from '../const';
+import { UserAction, UpdateType } from '../const';
 import PointEditForm from '../view/point-edit-form';
 import { RenderPosition, render, remove } from '../framework/render';
 
@@ -9,13 +9,15 @@ export default class NewEvent {
   #handleDataChange = null;
   #handleDestroy = null;
   #formComponent = null;
+  #handleReset = null;
 
-  constructor({ eventListContainer, destinationsModel, offersModel, onDataChange, onDestroy }) {
+  constructor({ eventListContainer, destinationsModel, offersModel, onDataChange, onDestroy, onReset }) {
     this.#eventListContainer = eventListContainer;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#handleReset = onReset;
   }
 
   init() {
@@ -23,14 +25,14 @@ export default class NewEvent {
       return;
     }
 
-    this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick});
+    this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick });
     render(this.#formComponent, this.#eventListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
-    this.#formComponent.updateElement({isSaving: true});
+    this.#formComponent.updateElement({ isSaving: true });
   }
 
   setAborting() {
@@ -50,6 +52,7 @@ export default class NewEvent {
     }
 
     this.#handleDestroy();
+    this.#handleReset();
 
     remove(this.#formComponent);
     this.#formComponent = null;

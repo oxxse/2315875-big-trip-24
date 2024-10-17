@@ -1,6 +1,7 @@
 import EventList from '../view/event-list';
 import SortingForm from '../view/sorting-form';
 import TripInfo from '../view/trip-info';
+import LoadingError from '../view/error';
 import { RenderPosition, render, remove } from '../framework/render';
 import NoPoints from '../view/no-points';
 import Event from './event';
@@ -27,6 +28,7 @@ export default class EventsList {
   #newEventPresenter = null;
   #loader = null;
   #isLoading = true;
+  #loadingError = null;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -39,7 +41,7 @@ export default class EventsList {
     this.#offersModel = offersModel;
     this.#filtersModel = filtersModel;
     this.#tripInfoContainer = tripInfoContainer;
-    this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy });
+    this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy, onReset: this.#handleFormReset });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
@@ -71,6 +73,10 @@ export default class EventsList {
     return this.#destinationsModel.destinations;
   }
 
+  get error() {
+    return this.#eventsModel.error;
+  }
+
   init() {
     this.#renderPage();
   }
@@ -87,23 +93,36 @@ export default class EventsList {
   }
 
   #renderPage() {
+    if (this.error) {
+      this.#renderError();
+      return;
+    }
+
     if (this.#isLoading) {
       this.#renderLoader();
       return;
     }
 
-    if (this.events.length === 0) {
+    if (this.events.length > 0) {
+      this.#renderSorting();
+    }
+
+    if (this.events.length === 0 && this.#emptyList === null) {
       this.#renderNoPoints();
     } else {
       this.#renderEventsList();
       this.#renderTripInfo();
-      this.#renderSorting();
     }
   }
 
   #renderLoader() {
     this.#loader = new Loader();
     render(this.#loader, this.#infoContainer, RenderPosition.BEFOREEND);
+  }
+
+  #renderError() {
+    this.#loadingError = new LoadingError();
+    render(this.#loadingError, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderNoPoints() {
@@ -146,10 +165,7 @@ export default class EventsList {
     remove(this.#sorting);
     remove(this.#tripInfo);
     remove(this.#loader);
-
-    if (this.#emptyList) {
-      remove(this.#emptyList);
-    }
+    remove(this.#emptyList);
 
     if (resetSortingType) {
       this.#currentSortType = SortingType.DAY;
@@ -189,6 +205,13 @@ export default class EventsList {
         break;
     }
     this.#uiBlocker.unblock();
+  };
+
+  #handleFormReset = () => {
+    if (this.events.length === 0) {
+      remove(this.#sorting);
+      this.#renderNoPoints();
+    }
   };
 
   #handleModeChange = () => {

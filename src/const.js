@@ -48,8 +48,8 @@ const SortingType = {
 const EmptyText = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.FUTURE]: 'There are no future events now',
-  [FilterType.PAST]: 'There are no past events now',
-  [FilterType.PRESENT]: 'There are no present events now'
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now'
 };
 
 const MAX_DESTINATIONS = 3;
@@ -79,7 +79,7 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
-const AUTHORIZATION = 'Basic ofv23Pdd45dPPd0s1';
+const AUTHORIZATION = 'Basic of23Pdd5dPPd0s213vsa12d';
 
 const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 

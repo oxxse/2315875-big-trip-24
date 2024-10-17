@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 
-function createError() {
+function createLoadingError() {
   return (
     `<p class="trip-events__msg">
       Failed to load latest route information
@@ -8,8 +8,8 @@ function createError() {
   );
 }
 
-export default class Error extends AbstractView {
+export default class LoadingError extends AbstractView {
   get template() {
-    return createError();
+    return createLoadingError();
   }
 }

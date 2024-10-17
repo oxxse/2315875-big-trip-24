@@ -6,6 +6,7 @@ export default class EventsModel extends Observable {
   #offersModel = null;
   #destinationsModel = null;
   #events = [];
+  #isError = false;
 
   constructor({ eventsApiService, offersModel, destinationsModel }) {
     super();
@@ -18,6 +19,10 @@ export default class EventsModel extends Observable {
     return this.#events;
   }
 
+  get error() {
+    return this.#isError;
+  }
+
   async init() {
     try {
       await Promise.all([
@@ -28,6 +33,7 @@ export default class EventsModel extends Observable {
       this.#events = events.map(this.#adaptToClient);
     } catch (error) {
       this.#events = [];
+      this.#isError = true;
     }
 
     this._notify(UpdateType.INIT);

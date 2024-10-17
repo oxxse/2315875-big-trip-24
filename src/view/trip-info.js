@@ -9,7 +9,7 @@ function createTripInfo({ totalPrice, destinationNames, points }) {
     `<section class="trip-main__trip-info trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${destinations.length > MAX_DESTINATIONS ? `${destinations[0]}&mdash;...&mdash;${destinations[destinations.length - 1]}` : destinations.join(' &mdash; ')}</h1>
-        <p class="trip-info__dates">${formatDate(points[0].dateFrom, DateFormat.HEADER_DATE)}&nbsp;&mdash;&nbsp;${formatDate(points[points.length - 1].dateTo, DateFormat.HEADER_DATE)}</p>
+        ${points.length === 0 ? '' : ` <p class="trip-info__dates">${formatDate(points[0].dateFrom, DateFormat.HEADER_DATE)}&nbsp;&mdash;&nbsp;${formatDate(points[points.length - 1].dateTo, DateFormat.HEADER_DATE)}`}</p>
       </div>
       <p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>

@@ -10,7 +10,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(state, allOffers, destinations, isEdit) {
-
   const { price, dateFrom, dateTo, destination, offers, type, isDisabled, isSaving, isDeleting } = state;
   const offersByType = allOffers.find((offer) => offer.type === type);
   const destinationItem = destinations.find((place) => place.id === destination);
