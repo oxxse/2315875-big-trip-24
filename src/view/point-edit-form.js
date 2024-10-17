@@ -63,8 +63,8 @@ function createPointEditForm(state, allOffers, destinations, isEdit) {
             </label>
             <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1" pattern=${numberPattern} ${isDisabled ? 'disabled' : ''} required>
           </div>
-          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset">${deleteButtonName()}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSaving ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDeleting ? 'disabled' : ''}>${deleteButtonName()}</button>
           ${isEdit ? createOpenButton() : ''}
         </header>
         <section class="event__details">
