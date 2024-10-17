@@ -62,13 +62,13 @@ export default class EventsList {
 
     return filteredEvents;
   }
+  
+  get offers() {
+    return this.#offersModel.offers;
+  }
 
   get destinations() {
     return this.#destinationsModel.destinations;
-  }
-
-  get offers() {
-    return this.#offersModel.offers;
   }
 
   init() {
