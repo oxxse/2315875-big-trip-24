@@ -100,14 +100,14 @@ export default class EventsList {
 
     if (this.events.length > 0) {
       this.#renderSorting();
+      this.#renderTripInfo();
     }
 
     if (this.events.length === 0) {
       this.#renderNoPoints();
     }
-    this.#renderEventsList();
-    this.#renderTripInfo();
 
+    this.#renderEventsList();
   }
 
   #renderLoader() {
@@ -133,7 +133,7 @@ export default class EventsList {
   }
 
   #renderTripInfo() {
-    this.#tripInfo = new TripInfo({ points: this.events, offers: this.offers, destinations: this.destinations });
+    this.#tripInfo = new TripInfo({ defaultPoints: this.#eventsModel.events.sort(sortByDay), destinations: this.destinations, offers: this.offers});
     render(this.#tripInfo, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
   }
 
