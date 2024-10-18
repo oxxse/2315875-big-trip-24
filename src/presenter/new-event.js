@@ -3,7 +3,7 @@ import PointEditForm from '../view/point-edit-form';
 import { RenderPosition, render, remove } from '../framework/render';
 
 export default class NewEvent {
-  #eventListContainer = null;
+  #eventListContainerElement = null;
   #destinationsModel = null;
   #offersModel = null;
   #handleDataChange = null;
@@ -11,20 +11,13 @@ export default class NewEvent {
   #formComponent = null;
   #handleReset = null;
 
-  constructor({ eventListContainer, destinationsModel, offersModel, onDataChange, onDestroy, onReset }) {
-    this.#eventListContainer = eventListContainer;
+  constructor({ eventListContainerElement, destinationsModel, offersModel, onDataChange, onDestroy, onReset }) {
+    this.#eventListContainerElement = eventListContainerElement;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
     this.#handleReset = onReset;
-  }
-
-  init() {
-    this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick });
-    render(this.#formComponent, this.#eventListContainer, RenderPosition.AFTERBEGIN);
-
-    document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
@@ -42,8 +35,15 @@ export default class NewEvent {
     this.#formComponent.shake(resetFormState);
   }
 
+  init() {
+    this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick });
+    render(this.#formComponent, this.#eventListContainerElement, RenderPosition.AFTERBEGIN);
+
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
   destroy() {
-    if (this.#formComponent === null) {
+    if (!this.#formComponent) {
       return;
     }
 

@@ -5,12 +5,12 @@ import Filters from '../view/filters';
 export default class Filter {
   #eventsModel = null;
   #filtersModel = null;
-  #filtersContainer = null;
-  #filtersComponent = null;
+  #filtersContainerElement = null;
+  #filtersElement = null;
 
-  constructor(filtersContainer, eventsModel, filtersModel) {
+  constructor(filtersContainerElement, eventsModel, filtersModel) {
     this.#eventsModel = eventsModel;
-    this.#filtersContainer = filtersContainer;
+    this.#filtersContainerElement = filtersContainerElement;
     this.#filtersModel = filtersModel;
 
     this.#eventsModel.addObserver(this.#handleEventsChange);
@@ -26,12 +26,12 @@ export default class Filter {
   }
 
   #renderFilters() {
-    if (this.#filtersComponent) {
-      remove(this.#filtersComponent);
+    if (this.#filtersElement) {
+      remove(this.#filtersElement);
     }
 
-    this.#filtersComponent = new Filters({points: this.events, currentFilter: this.#filtersModel.filter, onFilterChange: this.#handleFilterChange});
-    render(this.#filtersComponent, this.#filtersContainer);
+    this.#filtersElement = new Filters({points: this.events, currentFilter: this.#filtersModel.filter, onFilterChange: this.#handleFilterChange});
+    render(this.#filtersElement, this.#filtersContainerElement);
   }
 
   #handleFilterChange = (filterType) => {
