@@ -133,7 +133,7 @@ export default class EventsList {
   }
 
   #renderTripInfo() {
-    this.#tripInfo = new TripInfo({ points: this.events, destinations: this.destinations });
+    this.#tripInfo = new TripInfo({ points: this.events, offers: this.offers, destinations: this.destinations });
     render(this.#tripInfo, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
   }
 

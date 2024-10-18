@@ -81,7 +81,7 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
-const AUTHORIZATION = 'Basic of23Pdd5dPPd0s213vsa12d';
+const AUTHORIZATION = 'Basic of23Pdd5dPd0s213vsa12d';
 
 const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 

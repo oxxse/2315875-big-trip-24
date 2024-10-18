@@ -20,11 +20,13 @@ function createTripInfo({ totalPrice, destinationNames, points }) {
 
 export default class TripInfo extends AbstractView {
   #points = [];
+  #offers = [];
   #destinations = [];
 
-  constructor({ points, destinations }) {
+  constructor({ points, offers, destinations }) {
     super();
     this.#points = points;
+    this.#offers = offers;
     this.#destinations = destinations;
   }
 
@@ -32,8 +34,18 @@ export default class TripInfo extends AbstractView {
     return createTripInfo({ totalPrice: this.#calculateTotalPrice(), destinationNames: this.#getDestinationNames(), points: this.#points });
   }
 
+  #calculateOffersPrice = (acc, item) => {
+    const pointOffers = [];
+    const offersByType = this.#offers.find((offer) => offer.type === item.type);
+    offersByType.offers.map((offer) => item.offers.includes(offer.id) ? pointOffers.push(offer) : pointOffers);
+    const offerPrice = pointOffers.reduce((total, offer) => total + parseInt(offer.price, 10), 0);
+    return acc + offerPrice;
+  };
+
   #calculateTotalPrice() {
-    return this.#points.reduce((total, point) => total + parseInt(point.price, 10), 0);
+    const totalOffersPrice = this.#points.reduce(this.#calculateOffersPrice, 0);
+    const totalPointsPrice = this.#points.reduce((total, point) => total + parseInt(point.price, 10), 0);
+    return totalOffersPrice + totalPointsPrice;
   }
 
   #getDestinationNames() {
