@@ -65,6 +65,7 @@ export default class Event {
 
   resetFormView() {
     if (this.#mode !== Mode.VIEWING) {
+      this.#editForm.reset();
       this.#replaceEditFormToEvent();
     }
   }
@@ -110,9 +111,9 @@ export default class Event {
   }
 
   #replaceEventToEditForm() {
+    this.#handleModeChange();
     replace(this.#editForm, this.#eventItem);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
-    this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
@@ -123,10 +124,11 @@ export default class Event {
   }
 
   #escapeKeydownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#editForm.reset();
       this.#replaceEditFormToEvent();
+      document.removeEventListener('keydown', this.#escapeKeydownHandler);
     }
   };
 
@@ -140,13 +142,11 @@ export default class Event {
 
   #handleSubmitClick = (updateItem) => {
     this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR, updateItem);
-    document.removeEventListener('keydown', this.#escapeKeydownHandler);
   };
 
   #handleResetClick = () => {
     this.#editForm.reset(this.#event);
     this.#replaceEditFormToEvent();
-    document.removeEventListener('keydown', this.#escapeKeydownHandler);
   };
 
   #handleDeleteClick = (event) => {

@@ -1,13 +1,12 @@
 import EventList from '../view/event-list';
 import SortingForm from '../view/sorting-form';
 import TripInfo from '../view/trip-info';
+import Stub from '../view/stub';
 import { RenderPosition, render, remove } from '../framework/render';
-import NoPoints from '../view/no-points';
 import Event from './event';
 import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
-import { FilterType, SortingType, TimeLimit, UpdateType, UserAction } from '../const';
+import { EmptyText, FilterType, SortingType, TimeLimit, UpdateType, UserAction } from '../const';
 import NewEvent from './new-event';
-import Loader from '../view/loader';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 export default class EventsList {
@@ -27,6 +26,7 @@ export default class EventsList {
   #newEventPresenter = null;
   #loader = null;
   #isLoading = true;
+  #loadingError = null;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -39,7 +39,7 @@ export default class EventsList {
     this.#offersModel = offersModel;
     this.#filtersModel = filtersModel;
     this.#tripInfoContainer = tripInfoContainer;
-    this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy });
+    this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy, onReset: this.#handleFormReset });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
@@ -71,43 +71,59 @@ export default class EventsList {
     return this.#destinationsModel.destinations;
   }
 
+  get error() {
+    return this.#eventsModel.error;
+  }
+
   init() {
     this.#renderPage();
   }
 
   createEvent() {
-    if (this.#emptyList) {
-      remove(this.#emptyList);
-    }
-
     this.#currentSortType = SortingType.DAY;
     this.#currentFilter = FilterType.EVERYTHING;
     this.#filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    remove(this.#emptyList);
     this.#newEventPresenter.init();
   }
 
   #renderPage() {
+    if (this.error) {
+      this.#renderError();
+      return;
+    }
+
     if (this.#isLoading) {
       this.#renderLoader();
       return;
     }
 
-    if (this.events.length === 0) {
-      this.#renderNoPoints();
-    } else {
-      this.#renderEventsList();
-      this.#renderTripInfo();
+    if (this.events.length > 0) {
       this.#renderSorting();
     }
+
+    if (this.events.length === 0) {
+      this.#renderNoPoints();
+    }
+    this.#renderEventsList();
+    this.#renderTripInfo();
+
   }
 
   #renderLoader() {
-    this.#loader = new Loader();
+    const loadingText = Object.keys(EmptyText).find((item) => item === 'LOADING');
+    this.#loader = new Stub({ filterType: loadingText });
     render(this.#loader, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
+  #renderError() {
+    const loadingErrorText = Object.keys(EmptyText).find((item) => item === 'LOADING_ERROR');
+    this.#loadingError = new Stub({ filterType: loadingErrorText });
+    render(this.#loadingError, this.#infoContainer, RenderPosition.BEFOREEND);
+  }
+
   #renderNoPoints() {
-    this.#emptyList = new NoPoints({ filterType: this.#currentFilter });
+    this.#emptyList = new Stub({ filterType: this.#currentFilter });
     render(this.#emptyList, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
@@ -146,10 +162,7 @@ export default class EventsList {
     remove(this.#sorting);
     remove(this.#tripInfo);
     remove(this.#loader);
-
-    if (this.#emptyList) {
-      remove(this.#emptyList);
-    }
+    remove(this.#emptyList);
 
     if (resetSortingType) {
       this.#currentSortType = SortingType.DAY;
@@ -189,6 +202,13 @@ export default class EventsList {
         break;
     }
     this.#uiBlocker.unblock();
+  };
+
+  #handleFormReset = () => {
+    if (this.events.length === 0) {
+      remove(this.#sorting);
+      this.#renderNoPoints();
+    }
   };
 
   #handleModeChange = () => {
