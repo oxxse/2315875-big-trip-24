@@ -39,7 +39,7 @@ export default class EventsList {
     this.#offersModel = offersModel;
     this.#filtersModel = filtersModel;
     this.#tripInfoContainerElement = tripInfoContainerElement;
-    this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy, onReset: this.#handleFormReset });
+    this.#newEventPresenter = new NewEvent({ eventListContainerElement: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy, onReset: this.#handleFormReset });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
