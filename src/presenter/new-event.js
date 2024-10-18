@@ -21,10 +21,6 @@ export default class NewEvent {
   }
 
   init() {
-    if (this.#formComponent !== null) {
-      return;
-    }
-
     this.#formComponent = new PointEditForm({ offers: this.#offersModel.offers, destinations: this.#destinationsModel.destinations, isEdit: false, onFormSubmit: this.#handleFormSubmit, onFormReset: this.#handleCancelClick, onDeleteClick: this.#handleCancelClick });
     render(this.#formComponent, this.#eventListContainer, RenderPosition.AFTERBEGIN);
 

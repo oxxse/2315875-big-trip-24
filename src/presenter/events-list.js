@@ -1,14 +1,12 @@
 import EventList from '../view/event-list';
 import SortingForm from '../view/sorting-form';
 import TripInfo from '../view/trip-info';
-import LoadingError from '../view/error';
+import Stub from '../view/stub';
 import { RenderPosition, render, remove } from '../framework/render';
-import NoPoints from '../view/no-points';
 import Event from './event';
 import { sortByTime, sortByDay, sortByPrice, filterBy } from '../utils';
-import { FilterType, SortingType, TimeLimit, UpdateType, UserAction } from '../const';
+import { EmptyText, FilterType, SortingType, TimeLimit, UpdateType, UserAction } from '../const';
 import NewEvent from './new-event';
-import Loader from '../view/loader';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 export default class EventsList {
@@ -82,13 +80,10 @@ export default class EventsList {
   }
 
   createEvent() {
-    if (this.#emptyList) {
-      remove(this.#emptyList);
-    }
-
     this.#currentSortType = SortingType.DAY;
     this.#currentFilter = FilterType.EVERYTHING;
     this.#filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    remove(this.#emptyList);
     this.#newEventPresenter.init();
   }
 
@@ -107,26 +102,28 @@ export default class EventsList {
       this.#renderSorting();
     }
 
-    if (this.events.length === 0 && this.#emptyList === null) {
+    if (this.events.length === 0) {
       this.#renderNoPoints();
-    } else {
-      this.#renderEventsList();
-      this.#renderTripInfo();
     }
+    this.#renderEventsList();
+    this.#renderTripInfo();
+
   }
 
   #renderLoader() {
-    this.#loader = new Loader();
+    const loadingText = Object.keys(EmptyText).find((item) => item === 'LOADING');
+    this.#loader = new Stub({ filterType: loadingText });
     render(this.#loader, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderError() {
-    this.#loadingError = new LoadingError();
+    const loadingErrorText = Object.keys(EmptyText).find((item) => item === 'LOADING_ERROR');
+    this.#loadingError = new Stub({ filterType: loadingErrorText });
     render(this.#loadingError, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 
   #renderNoPoints() {
-    this.#emptyList = new NoPoints({ filterType: this.#currentFilter });
+    this.#emptyList = new Stub({ filterType: this.#currentFilter });
     render(this.#emptyList, this.#infoContainer, RenderPosition.BEFOREEND);
   }
 

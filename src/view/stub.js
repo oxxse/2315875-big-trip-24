@@ -1,7 +1,7 @@
 import { EmptyText } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-function createNoPoints(filterType) {
+function createStub(filterType) {
   return (
     `<p class="trip-events__msg">
       ${EmptyText[filterType]}
@@ -9,7 +9,7 @@ function createNoPoints(filterType) {
   );
 }
 
-export default class NoPoints extends AbstractView {
+export default class Stub extends AbstractView {
   #filterType = null;
 
   constructor({filterType}) {
@@ -18,6 +18,6 @@ export default class NoPoints extends AbstractView {
   }
 
   get template() {
-    return createNoPoints(this.#filterType);
+    return createStub(this.#filterType);
   }
 }
