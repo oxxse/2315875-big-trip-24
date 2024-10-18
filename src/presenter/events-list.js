@@ -11,7 +11,7 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker';
 
 export default class EventsList {
   #eventListComponent = new EventList;
-  #infoContainer = null;
+  #infoContainerElementElement = null;
   #eventsModel = null;
   #destinationsModel = null;
   #offersModel = null;
@@ -22,7 +22,7 @@ export default class EventsList {
   #filtersModel = null;
   #currentFilter = null;
   #tripInfo = null;
-  #tripInfoContainer = null;
+  #tripInfoContainerElement = null;
   #newEventPresenter = null;
   #loader = null;
   #isLoading = true;
@@ -32,13 +32,13 @@ export default class EventsList {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor(infoContainer, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainer, onNewPointDestroy) {
-    this.#infoContainer = infoContainer;
+  constructor(infoContainerElement, eventsModel, destinationsModel, offersModel, filtersModel, tripInfoContainerElement, onNewPointDestroy) {
+    this.#infoContainerElementElement = infoContainerElement;
     this.#eventsModel = eventsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#filtersModel = filtersModel;
-    this.#tripInfoContainer = tripInfoContainer;
+    this.#tripInfoContainerElement = tripInfoContainerElement;
     this.#newEventPresenter = new NewEvent({ eventListContainer: this.#eventListComponent.element, destinationsModel: this.#destinationsModel, offersModel: this.#offersModel, onDataChange: this.#handleViewAction, onDestroy: onNewPointDestroy, onReset: this.#handleFormReset });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
@@ -113,38 +113,38 @@ export default class EventsList {
   #renderLoader() {
     const loadingText = Object.keys(EmptyText).find((item) => item === 'LOADING');
     this.#loader = new Stub({ filterType: loadingText });
-    render(this.#loader, this.#infoContainer, RenderPosition.BEFOREEND);
+    render(this.#loader, this.#infoContainerElementElement, RenderPosition.BEFOREEND);
   }
 
   #renderError() {
     const loadingErrorText = Object.keys(EmptyText).find((item) => item === 'LOADING_ERROR');
     this.#loadingError = new Stub({ filterType: loadingErrorText });
-    render(this.#loadingError, this.#infoContainer, RenderPosition.BEFOREEND);
+    render(this.#loadingError, this.#infoContainerElementElement, RenderPosition.BEFOREEND);
   }
 
   #renderNoPoints() {
     this.#emptyList = new Stub({ filterType: this.#currentFilter });
-    render(this.#emptyList, this.#infoContainer, RenderPosition.BEFOREEND);
+    render(this.#emptyList, this.#infoContainerElementElement, RenderPosition.BEFOREEND);
   }
 
   #renderSorting() {
     this.#sorting = new SortingForm({ onSortChange: this.#handleSortChange, currentSorting: this.#currentSortType });
-    render(this.#sorting, this.#infoContainer, RenderPosition.AFTERBEGIN);
+    render(this.#sorting, this.#infoContainerElementElement, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripInfo() {
     this.#tripInfo = new TripInfo({ defaultPoints: this.#eventsModel.events.sort(sortByDay), destinations: this.destinations, offers: this.offers});
-    render(this.#tripInfo, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
+    render(this.#tripInfo, this.#tripInfoContainerElement, RenderPosition.AFTERBEGIN);
   }
 
   #renderEventsList() {
-    render(this.#eventListComponent, this.#infoContainer);
+    render(this.#eventListComponent, this.#infoContainerElementElement);
     this.events.forEach((event) => this.#renderEvent(event));
   }
 
   #renderEvent(event) {
     const eventPresenter = new Event({
-      eventListComponent: this.#eventListComponent.element,
+      eventListElement: this.#eventListComponent.element,
       offers: this.offers,
       destinations: this.destinations,
       onDataChange: this.#handleViewAction,

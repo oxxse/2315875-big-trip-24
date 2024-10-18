@@ -1,7 +1,6 @@
 
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const DEFAULT_TYPE = 'flight';
-const DESTINATIONS = ['Amsterdam', 'Geneva', 'Chamonix'];
 
 const Method = {
   GET: 'GET',
@@ -62,8 +61,6 @@ const UserAction = {
   DELETE_EVENT: 'DELETE_EVENT',
 };
 
-const MAX_OFFERS = 4;
-
 const BLANK_POINT = {
   price: 0,
   dateFrom: '',
@@ -81,7 +78,7 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
-const AUTHORIZATION = 'Basic of23Pdd5dPd0s213vsa12d';
+const AUTHORIZATION = 'Basic of23Pdd5dPd0s213dAvsa12d';
 
 const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 
@@ -89,9 +86,7 @@ export {
   EmptyText,
   SortingType,
   FilterType,
-  DESTINATIONS,
   EVENT_TYPES,
-  MAX_OFFERS,
   DateFormat,
   Mode,
   BLANK_POINT,

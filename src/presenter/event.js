@@ -4,7 +4,7 @@ import { remove, render, replace } from '../framework/render';
 import { Mode, UpdateType, UserAction } from '../const';
 
 export default class Event {
-  #eventListComponent = null;
+  #eventListElement = null;
   #eventItem = null;
   #event = null;
   #offers = [];
@@ -14,61 +14,14 @@ export default class Event {
   #handleModeChange = null;
   #mode = Mode.VIEWING;
 
-  constructor({ eventListComponent, offers, destinations, onDataChange, onModeChange }) {
-    this.#eventListComponent = eventListComponent;
+  constructor({ eventListElement, offers, destinations, onDataChange, onModeChange }) {
+    this.#eventListElement = eventListElement;
     this.#offers = offers;
     this.#destinations = destinations;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
-  init(event) {
-    this.#event = event;
-    const prevEventItem = this.#eventItem;
-    const prevEditForm = this.#editForm;
-
-    this.#eventItem = new EventItem({
-      event: this.#event,
-      offersData: this.#offers,
-      destinations: this.#destinations,
-      onEditClick: this.#handleEditButtonClick,
-      onFavoriteClick: this.#handleFavoriteButtonClick
-    });
-
-    this.#editForm = new PointEditForm({
-      event: this.#event,
-      offers: this.#offers,
-      destinations: this.#destinations,
-      isEdit: true,
-      onFormSubmit: this.#handleSubmitClick,
-      onFormReset: this.#handleResetClick,
-      onDeleteClick: this.#handleDeleteClick
-    });
-
-    if (!prevEventItem || !prevEditForm) {
-      render(this.#eventItem, this.#eventListComponent);
-      return;
-    }
-
-    if (this.#mode === Mode.VIEWING) {
-      replace(this.#eventItem, prevEventItem);
-    }
-
-    if (this.#mode === Mode.EDITING) {
-      replace(this.#editForm, prevEditForm);
-      this.#mode = Mode.VIEWING;
-    }
-
-    remove(prevEventItem);
-    remove(prevEditForm);
-  }
-
-  resetFormView() {
-    if (this.#mode !== Mode.VIEWING) {
-      this.#editForm.reset();
-      this.#replaceEditFormToEvent();
-    }
-  }
 
   setSaving() {
     if (this.#mode === Mode.EDITING) {
@@ -103,6 +56,54 @@ export default class Event {
     };
 
     this.#editForm.shake(resetFormState);
+  }
+
+  init(event) {
+    this.#event = event;
+    const prevEventItem = this.#eventItem;
+    const prevEditForm = this.#editForm;
+
+    this.#eventItem = new EventItem({
+      event: this.#event,
+      offersData: this.#offers,
+      destinations: this.#destinations,
+      onEditClick: this.#handleEditButtonClick,
+      onFavoriteClick: this.#handleFavoriteButtonClick
+    });
+
+    this.#editForm = new PointEditForm({
+      event: this.#event,
+      offers: this.#offers,
+      destinations: this.#destinations,
+      isEdit: true,
+      onFormSubmit: this.#handleSubmitClick,
+      onFormReset: this.#handleResetClick,
+      onDeleteClick: this.#handleDeleteClick
+    });
+
+    if (!prevEventItem || !prevEditForm) {
+      render(this.#eventItem, this.#eventListElement);
+      return;
+    }
+
+    if (this.#mode === Mode.VIEWING) {
+      replace(this.#eventItem, prevEventItem);
+    }
+
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#editForm, prevEditForm);
+      this.#mode = Mode.VIEWING;
+    }
+
+    remove(prevEventItem);
+    remove(prevEditForm);
+  }
+
+  resetFormView() {
+    if (this.#mode !== Mode.VIEWING) {
+      this.#editForm.reset();
+      this.#replaceEditFormToEvent();
+    }
   }
 
   destroy() {

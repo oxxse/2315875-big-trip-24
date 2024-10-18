@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { formatDate, getDestinationById } from '../utils';
+import { formatDate, getDestinationById, getOffersByType } from '../utils';
 import { DateFormat, MAX_DESTINATIONS } from '../const';
 
 function createTripInfo({ totalPrice, destinationNames, points }) {
@@ -36,7 +36,7 @@ export default class TripInfo extends AbstractView {
 
   #calculateOffersPrice = (acc, item) => {
     const pointOffers = [];
-    const offersByType = this.#offers.find((offer) => offer.type === item.type);
+    const offersByType = getOffersByType(this.#offers, item.type);
     offersByType.offers.map((offer) => item.offers.includes(offer.id) ? pointOffers.push(offer) : pointOffers);
     const offerPrice = pointOffers.reduce((total, offer) => total + parseInt(offer.price, 10), 0);
     return acc + offerPrice;

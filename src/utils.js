@@ -54,10 +54,6 @@ const filterBy = {
   [FilterType.PAST]: (events) => events.filter((event) => dayjs().isAfter(dayjs(event.dateTo)))
 };
 
-function updateItem(items, newItem) {
-  return items.map((item) => item.id === newItem.id ? newItem : item);
-}
-
 const sortByPrice = (pointA, pointB) => pointB.price - pointA.price;
 
 const sortByTime = (pointA, pointB) => {
@@ -66,8 +62,10 @@ const sortByTime = (pointA, pointB) => {
   return durationPointB - durationPointA;
 };
 
-const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1);
-
 const sortByDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
 
-export { capitalizeFirstLetter,getDuration, updateItem, sortByPrice, sortByTime, sortByDay, filterBy, formatDate, calculateDuration, getDestinationById };
+const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+
+const getOffersByType = (offers, type) => offers.find((offer) => offer.type === type);
+
+export { getOffersByType, capitalizeFirstLetter, sortByPrice, sortByTime, sortByDay, filterBy, formatDate, calculateDuration, getDestinationById };

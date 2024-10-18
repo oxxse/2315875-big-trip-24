@@ -3,16 +3,16 @@ import { createDestinationForm } from './templates/destination-form.js';
 import { createPointOffers } from './templates/point-offers.js';
 import { createPointDestination } from './templates/point-destination.js';
 import { createOpenButton } from './templates/open-button.js';
-import { formatDate } from '../utils.js';
+import { formatDate, getDestinationById, getOffersByType } from '../utils.js';
 import { DateFormat, BLANK_POINT } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createPointEditForm(state, allOffers, destinations, isEdit) {
-  const { price, dateFrom, dateTo, destination, offers, type, isDisabled, isSaving, isDeleting } = state;
-  const offersByType = allOffers.find((offer) => offer.type === type);
-  const destinationItem = destinations.find((place) => place.id === destination);
+  const { price, dateFrom, dateTo, offers, type, isDisabled, isSaving, isDeleting } = state;
+  const offersByType = getOffersByType(allOffers, type);
+  const destinationItem = getDestinationById(state, destinations);
   const numberPattern = '/d+';
 
   const deleteButtonName = () => {
@@ -97,7 +97,7 @@ export default class PointEditForm extends AbstractStatefulView {
     this.#handleEventDelete = onDeleteClick;
 
     if (isEdit) {
-      this.#destination = destinations.find((place) => place.id === event.destination);
+      this.#destination = getDestinationById(event, destinations);
       this._setState(PointEditForm.parsePointToState(event, this.#destination.id));
     } else {
       this._setState(PointEditForm.parsePointToState(event, event.destination));

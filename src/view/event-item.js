@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
 import { createFavoriteButton } from './templates/favorite-button';
 import { createOpenButton } from './templates/open-button';
-import { formatDate, calculateDuration } from '../utils';
+import { formatDate, calculateDuration, getOffersByType, getDestinationById } from '../utils';
 import { DateFormat } from '../const';
 
 function createSelectedOfferItem(offer) {
@@ -15,9 +15,9 @@ function createSelectedOfferItem(offer) {
 }
 
 function createEventItem(event, offersData, destinations) {
-  const { price, dateFrom, dateTo, destination, isFavorite, offers, type } = event;
-  const destinationItem = destinations.find((place) => place.id === destination);
-  const offersByType = offersData.find((offer) => offer.type === type);
+  const { price, dateFrom, dateTo, isFavorite, offers, type } = event;
+  const destinationItem = getDestinationById(event, destinations);
+  const offersByType = getOffersByType(offersData, type);
 
   return (
     `<li class="trip-events__item">
