@@ -21,7 +21,7 @@ export default class NewEvent {
   }
 
   setSaving() {
-    this.#formComponent.updateElement({ isSaving: true });
+    this.#formComponent.updateElement({ isSaving: true, isDisabled: true });
   }
 
   setAborting() {
