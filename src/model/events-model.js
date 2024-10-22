@@ -6,7 +6,7 @@ export default class EventsModel extends Observable {
   #offersModel = null;
   #destinationsModel = null;
   #events = [];
-  #isError = false;
+  isError = false;
 
   constructor({ eventsApiService, offersModel, destinationsModel }) {
     super();
@@ -20,7 +20,7 @@ export default class EventsModel extends Observable {
   }
 
   get error() {
-    return this.#isError;
+    return this.isError;
   }
 
   async init() {
@@ -33,7 +33,7 @@ export default class EventsModel extends Observable {
       this.#events = events.map(this.#adaptToClient);
     } catch (error) {
       this.#events = [];
-      this.#isError = true;
+      this.isError = true;
     }
 
     this._notify(UpdateType.INIT);

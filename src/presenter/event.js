@@ -49,7 +49,7 @@ export default class Event {
 
     const resetFormState = () => {
       this.#editForm.updateElement({
-        isDisabled: true,
+        isDisabled: false,
         isSaving: false,
         isDeleting: false
       });
