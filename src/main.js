@@ -20,7 +20,7 @@ const offersModel = new OffersModel({ eventsApiService });
 const destinationsModel = new DestinationsModel({ eventsApiService });
 const eventsModel = new EventsModel({ eventsApiService, offersModel, destinationsModel });
 const filtersModel = new FiltersModel();
-const newPointButtonComponent = new NewEventButton({ onClick: handleNewPointButtonClick });
+const newPointButtonComponent = new NewEventButton({ onButtonClick: handleNewPointButtonClick });
 
 const eventListPresenter = new EventList(infoContainerElement, eventsModel, destinationsModel, offersModel, filtersModel, mainContainerElement, handleNewPointFormClose);
 const filtersPresenter = new Filter(filterContainerElement, eventsModel, filtersModel);
@@ -34,7 +34,13 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
+newPointButtonComponent.element.disabled = true;
+render(newPointButtonComponent, buttonContainerElement);
+
 eventListPresenter.init();
 filtersPresenter.init();
-eventsModel.init()
-  .finally(() => render(newPointButtonComponent, buttonContainerElement));
+eventsModel.init().finally(() => {
+  if (!eventsModel.isError) {
+    newPointButtonComponent.element.disabled = false;
+  }
+});

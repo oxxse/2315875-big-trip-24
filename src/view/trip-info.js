@@ -34,12 +34,12 @@ export default class TripInfo extends AbstractView {
     return createTripInfo({ totalPrice: this.#calculateTotalPrice(), destinationNames: this.#getDestinationNames(), points: this.#points });
   }
 
-  #calculateOffersPrice = (acc, item) => {
+  #calculateOffersPrice = (priceSum, item) => {
     const pointOffers = [];
     const offersByType = getOffersByType(this.#offers, item.type);
     offersByType.offers.map((offer) => item.offers.includes(offer.id) ? pointOffers.push(offer) : pointOffers);
     const offerPrice = pointOffers.reduce((total, offer) => total + parseInt(offer.price, 10), 0);
-    return acc + offerPrice;
+    return priceSum + offerPrice;
   };
 
   #calculateTotalPrice() {

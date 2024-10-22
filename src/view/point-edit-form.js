@@ -75,10 +75,10 @@ function createPointEditForm(state, allOffers, destinations, isEdit) {
 }
 
 export default class PointEditForm extends AbstractStatefulView {
-  #initialEvent = [];
+  #initialEvent = null;
   #offers = [];
   #destinations = [];
-  #isEdit = null;
+  #isEdit = false;
   #handleFormSubmit = null;
   #handleFormReset = null;
   #handleEventDelete = null;

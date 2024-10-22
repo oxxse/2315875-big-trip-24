@@ -49,7 +49,7 @@ function createEventItem(event, offersData, destinations) {
 }
 
 export default class EventItem extends AbstractView {
-  #event = [];
+  #event = null;
   #offersData = [];
   #destinations = [];
   #handleEditClick = null;
