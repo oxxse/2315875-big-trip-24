@@ -33,10 +33,13 @@ export default class NewEventButton extends AbstractView {
         });
         navigator.clipboard.write([clipboardItem]);
       } else {
-        const status = 'fkrewfdch,gb';
-        setTimeout(() => {
-          navigator.clipboard.writeText(status);
+        const clipboardItem = new ClipboardItem({
+          'text/plain': new Promise((resolve) => {
+            const status = 'fffffffffff';
+            resolve(new Blob([status]));
+          }),
         });
+        navigator.clipboard.write([clipboardItem]);
       }
     } catch (error) {
       // console.log('fdvbfdvbdf');
