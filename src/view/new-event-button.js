@@ -22,7 +22,7 @@ export default class NewEventButton extends AbstractView {
     evt.preventDefault();
     const userAgent = navigator.userAgent;
     const isSafari = !!userAgent.match(/Version\/[\d.]+.*Safari/);
-    const isIphone = /iP(od|hone)/i.test(userAgent) && isSafari;
+    const isIphone = /iP(od|hone)/i.test(userAgent);
     try {
       if (isSafari || isIphone) {
         const clipboardItem = new ClipboardItem({
